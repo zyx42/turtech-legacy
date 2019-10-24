@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/common :: common-header"></head>
+
+<body>
+
+	<!-- Navigation -->
+	<nav th:replace="fragments/common :: common-navbar"></nav>
+
+	<!-- Page Content -->
+	<section class="jumbotron">
+		<div class="container">
+			<div class="alert alert-success">
+				<h1 class="jumbotron-heading my-3">
+					<i class="fa fa-check" aria-hidden="true"></i> ORDER SUBMITTED
+				</h1>
+				<h5>Thank you, your order has been placed.</h5>
+				<h5>
+					The estimated delivery date is <b><span
+						th:text="${estimatedDeliveryDate}"></span></b>
+				</h5>
+				<p>
+					<a class="btn btn-primary btn-lg" th:href="@{/products}"
+						role="button">Continue Shopping &raquo;</a>
+				</p>
+			</div>
+		</div>
+	</section>
+	<div class="container">
+		<div class="card my-4">
+			<div class="card-header">LIST OF ITEMS YOU ORDERED</div>
+			<div class="card-body">
+				<div class="row">
+					<div class="col-8">
+						<h5>Products</h5>
+					</div>
+					<div class="col-2">
+						<h5>Price</h5>
+					</div>
+					<div class="col-2">
+						<h5>Qty</h5>
+					</div>
+				</div>
+				<div class="row" th:each="cartItem : ${cartItemList}">
+					<hr />
+					<div class="col-2">
+						<a th:href="@{/bookDetail(id=${cartItem.product.id})}"> <img
+							class="img-responsive shelf-product"
+							th:src="#{adminPath}+@{/images/product/}+${cartItem.product.id}+'.png'"
+							style="width: 70px;" />
+						</a>
+					</div>
+					<div class="col-6">
+						<div style="margin-left: 50px;">
+							<a th:href="@{/bookDetail?id=}+${cartItem.product.id}">
+								<h4 th:text="${cartItem.product.name}"></h4>
+							</a>
+						</div>
+					</div>
+
+					<div class="col-2">
+						<h5 style="color: #db3208; font-size: large;">
+							$<span th:text="${cartItem.product.ourPrice}"></span>
+						</h5>
+					</div>
+
+					<div class="col-2">
+						<h5 style="font-size: large;" th:text="${cartItem.qty}"></h5>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Footer -->
+	<footer th:replace="fragments/common :: common-footer"></footer>
+
+	<div th:replace="fragments/common :: common-bottom"></div>
+</body>
+</html>

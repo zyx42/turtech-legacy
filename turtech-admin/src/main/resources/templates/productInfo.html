@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/common :: common-header"></head>
+
+<body id="page-top">
+
+<div th:replace="fragments/common :: common-navbar"></div>
+
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <div th:replace="fragments/common :: common-sidebar"></div>
+
+    <div id="content-wrapper">
+
+        <div class="container-fluid">
+
+            <!-- Breadcrumbs-->
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="#">Products</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Product Info</li>
+                </ol>
+            </nav>
+
+            <div class="container">
+
+            <div class="row">
+                <div class="col-3">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <img th:src="@{/image/product/}+${product.id}+'.png'"
+                                 class="img-responsive center-block" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-9">
+                    <h3 th:text="${product.name}"></h3>
+                    <a th:href="@{/product/updateProduct?id=}+${product.id}">Edit</a>
+                    <div class="row">
+                        <div class="col-6">
+                            <p><strong>Manufacturer: </strong><span th:text="${product.manufacturer}"></span></p>
+                            <p><strong>Manufacture Date: </strong><span th:text="${product.manufactureDate}"></span></p>
+                            <p><strong>Category: </strong><span th:text="${product.category}"></span></p>
+                            <p><strong>Condition: </strong><span th:text="${product.condition}"></span></p>
+                        </div>
+                        <div class="col-6">
+                            <p><strong>Shipping Weight: </strong><span th:text="${product.shippingWeight}"></span></p>
+                            <p><strong>List Price: </strong><span th:text="${product.listPrice}"></span></p>
+                            <p><strong>Our Price: </strong><span th:text="${product.ourPrice}"></span></p>
+                            <p><strong>Number in Stock: </strong><span th:text="${product.inStockNumber}"></span></p>
+                        </div>
+                    </div>
+
+                    <p><Strong>Description: </Strong><span th:utext="${product.description}"></span></p>
+                    <p><Strong>Specifications: </Strong><span th:utext="${product.specifications}"></span></p>
+                </div>
+
+            </div>
+
+            </div>
+
+        </div>
+        <!-- /.container-fluid -->
+
+        <!-- Sticky Footer -->
+        <footer th:replace="fragments/common :: common-footer" class="sticky-footer"></footer>
+
+    </div>
+    <!-- /.content-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+
+<div th:replace="fragments/common :: common-bottom"></div>
+
+</body>
+
+</html>

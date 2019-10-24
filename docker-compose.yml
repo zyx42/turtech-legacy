@@ -1,0 +1,44 @@
+version: '3'
+services:
+  turtech-store:
+    build: turtech-store/
+    image: turtech-store
+    container_name: turtech-store
+    depends_on: 
+      - turtech-admin
+      - db
+    ports:
+      - 9090:9090
+    networks:
+      - storedb
+
+  turtech-admin:
+    build: turtech-admin/
+    image: turtech-admin
+    container_name: turtech-admin
+    ports:
+      - 9091:9091
+    networks:
+      - admindb
+
+  db:
+    build: db/
+    image: postgres
+    container_name: turtech-db
+    environment:
+      POSTGRES_USER: turtech
+      POSTGRES_PASSWORD: turtechpassword
+      POSTGRES_DB: turtech
+    ports:
+      - 5432:5432
+    expose: 
+      - 5432
+    networks:
+      - storedb
+      - admindb
+
+networks:
+  storedb:
+    driver: bridge
+  admindb:
+    driver: bridge

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/common :: common-header"></head>
+
+<body id="page-top">
+
+<div th:replace="fragments/common :: common-navbar"></div>
+
+<div id="wrapper">
+
+  <!-- Sidebar -->
+  <div th:replace="fragments/common :: common-sidebar"></div>
+
+      <div id="content-wrapper">
+
+        <div class="container-fluid">
+
+          <!-- Breadcrumbs-->
+          <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                  <li class="breadcrumb-item active" aria-current="page"><a href="#">Products</a></li>
+              </ol>
+          </nav>
+
+          <!-- Products DataTable -->
+          <div class="card mb-3">
+            <div class="card-header">
+              <i class="fa fa-table"></i>
+              Products Data Table</div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-bordered" id="productListTable" width="100%" cellspacing="0">
+                  <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Manufacturer</th>
+                    <th>Category</th>
+                    <th>Condition</th>
+                    <th>List Price</th>
+                    <th>Our Price</th>
+                    <th>Discontinued</th>
+                    <th>Operation</th>
+                  </tr>
+                  </thead>
+                  <tfoot>
+                  <tr>
+                    <th>Name</th>
+                    <th>Manufacturer</th>
+                    <th>Category</th>
+                    <th>Condition</th>
+                    <th>List Price</th>
+                    <th>Our Price</th>
+                    <th>Discontinued</th>
+                    <th>Operation</th>
+                  </tr>
+                  </tfoot>
+                  <tbody>
+                  <tr data-th-each="product : ${productList}">
+                    <td><a th:href="@{/product/productInfo(id=${product.id})}">
+                        <span th:text="${product.name}"></span></a></td>
+                    <td th:text="${product.manufacturer}"></td>
+                    <td th:text="${product.category}"></td>
+                    <td th:text="${product.condition}"></td>
+                    <td th:text="${product.listPrice}"></td>
+                    <td th:text="${product.ourPrice}"></td>
+                    <td th:text="${product.discontinued}"></td>
+                    <td>
+                      <a th:href="@{/product/deleteProduct?id=}+${product.id}"
+                        class="btn btn-danger btn-xs">
+                        <span class="fa fa-trash"></span> Delete</a>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+          </div>
+
+        </div>
+        <!-- /.container-fluid -->
+
+    <!-- Sticky Footer -->
+    <footer th:replace="fragments/common :: common-footer" class="sticky-footer"></footer>
+
+  </div>
+  <!-- /.content-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+
+<div th:replace="fragments/common :: common-bottom"></div>
+
+<script th:src="@{/js/datatables.js}"></script>
+
+<script th:inline="javascript">
+    $(document).ready(function() {
+        $("#productListTable").DataTable({
+            "lengthMenu": [ [5,10,15,20,-1],[5,10,15,20,"All"] ],
+            "ordering": false,
+            stateSave: true
+        });
+    });
+</script>
+
+</body>
+
+</html>

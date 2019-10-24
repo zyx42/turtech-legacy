@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/common :: common-header"></head>
+
+<body>
+
+	<!-- Navigation -->
+	<nav th:replace="fragments/common :: common-navbar"></nav>
+	<section class="jumbotron text-center">
+		<div class="container">
+			<h1 class="jumbotron-heading">PRODUCTS</h1>
+			<p class="lead text-muted mb-0">Only the finest pieces of
+				technology, crafted in the hottest of dwarven forges!</p>
+		</div>
+	</section>
+
+	<!-- Page content -->
+	<div class="container">
+		<div class="row">
+			<div class="col">
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+						<li class="breadcrumb-item"><a th:href="@{/products}">Products</a></li>
+						<li class="breadcrumb-item active" aria-current="page"><span
+							th:if=${activeAll}>All</span> <span th:if=${activeLaptops}>Laptops</span>
+							<span th:if=${activeCellphones}>Cellphones</span> <span
+							th:if=${activeTablets}>Tablets</span></li>
+					</ol>
+				</nav>
+			</div>
+		</div>
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-12 col-sm-3">
+				<div class="card bg-light mb-3">
+					<div class="card-header bg-success text-white text-uppercase">
+						<i class="fa fa-list"></i> Categories
+					</div>
+					<div class="list-group category_block">
+						<a class="list-group-item" th:classappend="${activeAll}? 'active'"
+							th:href="@{/products(category='all')}">All</a> <a
+							class="list-group-item"
+							th:classappend="${activeLaptops}? 'active'"
+							th:href="@{/searchByCategory(category='Laptops')}">Laptops</a> <a
+							class="list-group-item"
+							th:classappend="${activeCellphones}? 'active'"
+							th:href="@{/searchByCategory(category='Cellphones')}">Cellphones</a>
+						<a class="list-group-item"
+							th:classappend="${activeTablets}? 'active'"
+							th:href="@{/searchByCategory(category='Tablets')}">Tablets</a>
+					</div>
+				</div>
+			</div>
+			<div class="col">
+				<div th:if="${productPage.isEmpty()}" class="alert alert-warning">
+					Oops, no products have been found according to the given
+					criteria...</div>
+				<!-- Product display -->
+				<div class="row" th:if="${productPage != null}">
+					<div class="col-lg-4 col-md-6 mb-4"
+						th:each="product, iStat : ${productPage.content}"
+						th:if="${!product.discontinued and product != null}">
+						<div class="card h-100">
+							<!-- 600x400 image th:src="#{adminPath}+@{~/images/product/}+${product.id}+'.png'"-->
+							<img class="card-img-top"
+								src="https://dummyimage.com/600x400/55595c/fff" alt="">
+							<div class="card-body">
+								<a th:href="@{/productDetails?id=}+${product.id}"
+									title="View Product"><h4 class="card-title"
+										th:text="${product.name}"></h4></a>
+								<p class="card-text"
+									th:utext="${#strings.abbreviate(product.specifications, 1000)}"></p>
+							</div>
+							<div class="card-footer">
+								<div class="col align-bottom">
+									<h5>
+										<span style="font-size: x-large; color: #db3208;"
+											th:text="${'$' + #numbers.formatDecimal(product.ourPrice, 0 , 'COMMA', 2, 'POINT')}"></span>
+										<span style="text-decoration: line-through;"
+											th:text="'$' + ${#numbers.formatDecimal(product.listPrice, 0 , 'COMMA', 2, 'POINT')}"></span>
+									</h5>
+								</div>
+								<div class="col align-bottom">
+								<button class="btn btn-success btn-block add-to-cart"
+										th:id=${product.id}>
+									<span class="fa fa-shopping-cart"></span> Add to cart
+								</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- Pagination -->
+					<div class="col-12"
+						th:if="${productPage != null and productPage.totalPages > 1}">
+						<nav aria-label="Pagination">
+							<ul class="pagination">
+								<li class="page-item disabled"
+									th:class="${!productPage.hasPrevious()} ? 'page-item disabled'">
+									<a class="page-link"
+									th:href="@{/products(page=${productPage.number})}">Previous</a>
+								</li>
+								<li class="page-item" th:each="pageNumber : ${pageNumbers}"
+									th:class="${pageNumber==productPage.number + 1} ? 'page-item active'">
+									<a class="page-link" th:href="@{/products(page=${pageNumber})}"
+									th:inline="text">[[${pageNumber}]] <span class="sr-only"
+										th:if="${pageNumber == productPage.number + 1}">(current)</span></a>
+								</li>
+								<li class="page-item"
+									th:class="${!productPage.hasNext()} ? 'page-item disabled'">
+									<a class="page-link"
+									th:href="@{/products(page=${productPage.number + 2})}">Next</a>
+								</li>
+							</ul>
+						</nav>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	
+	<!-- Footer -->
+	<footer th:replace="fragments/common :: common-footer"></footer>
+
+	<div th:replace="fragments/common :: common-bottom"></div>
+
+	<!-- Custom scripts for the page-->
+	<script th:inline="javascript" th:src="@{/js/products.js}"></script>
+</body>
+</html>

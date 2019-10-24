@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/common :: common-header"></head>
+
+<body>
+
+	<!-- Navigation -->
+	<nav th:replace="fragments/common :: common-navbar"></nav>
+
+	<!-- Page Content -->
+	<section class="jumbotron text-center">
+		<div class="container">
+			<h1 class="jumbotron-heading">SHOPPING CART</h1>
+		</div>
+	</section>
+
+	<div class="container mb-4">
+		<div class="row">
+			<div class="col-12">
+				<!-- display products in cart -->
+				<div class="table-responsive">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th scope="col"></th>
+								<th scope="col">Product</th>
+								<th scope="col">Availability</th>
+								<th scope="col" class="text-center">Quantity</th>
+								<th scope="col" class="text-right">Price</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="cartItem : ${cartItemList}">
+								<td><img src="https://dummyimage.com/50x50/55595c/fff" />
+								</td>
+								<td><a
+									th:href="@{/productDetails?id=}+${cartItem.product.id}">
+										<h5 th:text="${cartItem.product.name}"></h5>
+								</a></td>
+								<td><p th:if="${cartItem.product.inStockNumber&gt;10}"
+										style="color: green;">In Stock</p>
+									<p
+										th:if="${cartItem.product.inStockNumber&lt;10 and cartItem.product.inStockNumber&gt;0}"
+										style="color: green;">
+										Only <span th:text="${cartItem.product.inStockNumber}"></span>
+										In Stock
+									</p>
+									<p th:if="${cartItem.product.inStockNumber==0}"
+										style="color: darkred;">Product Unavailable</p></td>
+								<td>
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<button type="button"
+												th:id="m + ${cartItem.id}"
+												class="quantity-left-minus btn btn-danger btn-number"
+												data-type="minus" data-field="qty">
+												<i class="fa fa-minus"></i>
+											</button>
+										</div>
+										<input type="text" class="form-control" th:id="qty + ${cartItem.id}" name="qty"
+											min="1" max="100" th:value="${cartItem.qty}">
+										<div class="input-group-append">
+											<button type="button"
+												th:id="p + ${cartItem.id}"
+												class="quantity-right-plus btn btn-success btn-number"
+												data-type="plus" data-field="qty">
+												<i class="fa fa-plus"></i>
+											</button>
+										</div>
+									</div>
+								</td>
+								<td class="text-right">
+									<h5 style="color: #db3208; font-size: large;">
+										$<span th:text="${cartItem.product.ourPrice}"
+											th:style="${cartItem.product.inStockNumber}==0? 'text-decoration: line-through' : ''">
+										</span>
+									</h5>
+								</td>
+								<td class="text-right"><a class="btn btn-sm btn-danger"
+									th:href="@{/shoppingCart/removeItem?id=}+${cartItem.id}"> <i
+										class="fa fa-trash"></i>
+								</a></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td>Sub-Total (<span id="subNumber" th:text="${numberOfItems}"></span>
+									items):
+								</td>
+								<td class="text-right"><span style="color: #db3208;">$<span
+										id="subSum"
+										th:text="${shoppingCart.grandTotal}"></span></span></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td>Tax</td>
+								<td class="text-right"><span style="color: #db3208;">$<span
+									id="tax"
+									th:text="${#numbers.formatDecimal(shoppingCart.grandTotal*0.06,0,2)}"></span></span></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td><strong>Total (<span
+										id="totalNumber"
+										th:text="${numberOfItems}"></span> items):
+								</strong></td>
+								<td class="text-right"><strong><span
+										style="color: #db3208; font-size: large;">$<span
+											id="totalSum"
+											th:with="total=${shoppingCart.grandTotal+shoppingCart.grandTotal*0.06}"
+											th:text="${#numbers.formatDecimal(total, 0, 2)}"></span></span></strong></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div th:if="${notEnoughStock}" class="alert alert-warning">
+					Oops, some of the products don't have enough stock. Please update
+					product quantity.</div>
+				<div th:if="${emptyCart}" class="alert alert-warning">Oops,
+					your cart is empty. See if you can find what you like in the store
+					and add it to the cart.</div>
+			</div>
+			<div class="col mb-2">
+				<div class="row">
+					<div class="col-sm-12  col-md-6">
+						<a class="btn btn-block btn-light" th:href="@{/products}">Continue
+							Shopping</a>
+					</div>
+					<div class="col-sm-12 col-md-6 text-right">
+						<a class="btn btn-lg btn-block btn-success text-uppercase"
+							th:href="@{/checkout(id=${shoppingCart.id})}">Checkout</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Footer -->
+	<footer th:replace="fragments/common :: common-footer"></footer>
+
+	<div th:replace="fragments/common :: common-bottom"></div>
+
+	<!-- Custom scripts for the page-->
+	<script th:inline="javascript" th:src="@{/js/shoppingCart.js}"></script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/common :: common-header"></head>
+
+<body id="page-top">
+
+<div th:replace="fragments/common :: common-navbar"></div>
+
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <div th:replace="fragments/common :: common-sidebar"></div>
+
+    <div id="content-wrapper">
+
+        <div class="container-fluid">
+
+            <!-- Breadcrumbs-->
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page"><a href="#">Users</a></li>
+                </ol>
+            </nav>
+
+            <!-- Users DataTable -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fa fa-table"></i>
+                    Users Data Table</div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="userListTable" width="100%" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Enabled</th>
+                                <th>Operation</th>
+                            </tr>
+                            </thead>
+                            <tfoot>
+                            <tr>
+                                <th>Username</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Enabled</th>
+                                <th>Operation</th>
+                            </tr>
+                            </tfoot>
+                            <tbody>
+                            <tr data-th-each="user : ${userList}">
+                                <td><a th:href="@{/user/userInfo(id=${user.id})}">
+                                    <span th:text="${user.username}"></span></a></td>
+                                <td th:text="${user.firstName}"></td>
+                                <td th:text="${user.lastName}"></td>
+                                <td th:text="${user.email}"></td>
+                                <td th:text="${user.phone}"></td>
+                                <td th:text="${user.enabled}"></td>
+                                <td>
+                                    <a th:href="@{/user/deleteUser?id=}+${user.id}"
+                                       class="btn btn-danger btn-xs delete-user">
+                                        <span class="fa fa-trash"></span> Delete</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+            </div>
+
+        </div>
+        <!-- /.container-fluid -->
+
+        <!-- Sticky Footer -->
+        <footer th:replace="fragments/common :: common-footer" class="sticky-footer"></footer>
+
+    </div>
+    <!-- /.content-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+
+<div th:replace="fragments/common :: common-bottom"></div>
+
+<script th:src="@{/js/datatables.js}"></script>
+
+<script th:inline="javascript">
+    $(document).ready(function() {
+        $("#userListTable").DataTable({
+            "lengthMenu": [ [5,10,15,20,-1],[5,10,15,20,"All"] ],
+            "ordering": false,
+            stateSave: true
+        });
+    });
+</script>
+
+</body>
+
+</html>

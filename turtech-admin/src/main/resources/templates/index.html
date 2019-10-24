@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/common :: common-header"></head>
+
+<body id="page-top">
+
+    <div th:replace="fragments/common :: common-navbar"></div>
+
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <div th:replace="fragments/common :: common-sidebar"></div>
+
+    <div id="content-wrapper">
+
+      <div class="container-fluid">
+
+        <!-- Breadcrumbs-->
+          <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                  <li class="breadcrumb-item active" aria-current="page"><a href="#">Overview</a></li>
+              </ol>
+          </nav>
+
+        <h5><i>"With great power comes great responsibility."</i>(c)</h5>
+
+      </div>
+      <!-- /.container-fluid -->
+
+      <!-- Sticky Footer -->
+      <footer th:replace="fragments/common :: common-footer" class="sticky-footer"></footer>
+
+    </div>
+    <!-- /.content-wrapper -->
+
+  </div>
+  <!-- /#wrapper -->
+
+  <div th:replace="fragments/common :: common-bottom"></div>
+
+</body>
+
+</html>

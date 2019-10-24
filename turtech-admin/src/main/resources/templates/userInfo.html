@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/common :: common-header"></head>
+
+<body id="page-top">
+
+<div th:replace="fragments/common :: common-navbar"></div>
+
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <div th:replace="fragments/common :: common-sidebar"></div>
+
+    <div id="content-wrapper">
+
+        <div class="container-fluid">
+
+            <!-- Breadcrumbs-->
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="#">Users</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">User Info</li>
+                </ol>
+            </nav>
+
+            <div class="container">
+
+                <div class="row">
+                    <div class="col-9">
+                        <h3 th:text="${user.username}"></h3>
+                        <small>(<a th:href="@{/user/updateUser?id=}+${user.id}">Edit</a>)</small>
+                        <div class="row">
+                            <div class="col-6">
+                                <p><strong>First Name: </strong><span th:text="${user.firstName}"></span></p>
+                                <p><strong>Last Name: </strong><span th:text="${user.lastName}"></span></p>
+                            </div>
+                            <div class="col-6">
+                                <p><strong>Email: </strong><span th:text="${user.email}"></span></p>
+                                <p><strong>Phone: </strong><span th:text="${user.phone}"></span></p>
+                                <p><strong>Enabled: </strong><span th:text="${user.enabled}"></span></p>
+                            </div>
+                        </div>
+
+                        <!-- <p><Strong>User Authorities: </Strong><span th:utext="${user.roles}"></span></p> -->
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+        <!-- /.container-fluid -->
+
+        <!-- Sticky Footer -->
+        <footer th:replace="fragments/common :: common-footer" class="sticky-footer"></footer>
+
+    </div>
+    <!-- /.content-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+
+<div th:replace="fragments/common :: common-bottom"></div>
+
+</body>
+
+</html>

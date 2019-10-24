@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/common :: common-header"></head>
+
+<body>
+
+	<!-- Navigation -->
+	<nav th:replace="fragments/common :: common-navbar"></nav>
+
+	<!-- Page Content -->
+	<section class="jumbotron text-center">
+		<div class="container">
+			<h1 class="jumbotron-heading">404</h1>
+			<p class="lead text-muted mb-0">Page Not Found</p>
+		</div>
+	</section>
+	<div class="container">
+		<div class="row">
+			<div class="col">
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+						<li class="breadcrumb-item active" aria-current="page">404</li>
+					</ol>
+				</nav>
+			</div>
+		</div>
+	</div>
+	<div class="jumbotron">
+		<h1 class="display-1">404</h1>
+		<p>The page you're looking for could not be found. Here are some
+			helpful links to get you back on track:</p>
+		<ul>
+			<li><a th:href="@{/}">Home</a></li>
+			<li><a th:href="@{/products}">Products</a></li>
+			<li><a th:href="@{/contact}">Contact</a></li>
+			<li><a th:href="@{/faq}">FAQ</a></li>
+			<li><a th:href="@{/hours}">Hours</a></li>
+		</ul>
+	</div>
+	<!-- /.jumbotron -->
+
+	<!-- Footer -->
+	<footer th:replace="fragments/common :: common-footer"></footer>
+
+	<div th:replace="fragments/common :: common-bottom"></div>
+</body>
+
+</html>
