@@ -1,7 +1,4 @@
 $('.add-to-cart').click(function() {
-    /*<![CDATA[*/
-    var loggedIn = /*[[${#httpServletRequest.getUserPrincipal()!=null}]]*/ 'someone';
-    /*]]*/
     console.log(loggedIn);
     if (!loggedIn) {
         window.location.hash = 'signin';

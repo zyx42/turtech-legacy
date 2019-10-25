@@ -249,9 +249,11 @@
 
 	<!-- Custom scripts for the page-->
 	<script>
-        var loggedIn = [[${#httpServletRequest.getUserPrincipal()!=null}]];
-		var inStock = [[${product.inStockNumber}]];
+		/*<![CDATA[*/
+        var loggedIn = /*[[${#httpServletRequest.getUserPrincipal()!=null}]]*/'';
+		var inStock = /*[[${product.inStockNumber}]]*/'';
 		var jointQty = 0;
+		/*]]*/
 	</script>
 	<script type="text/javascript" th:src="@{/js/productDetails.js}"></script>
 </body>

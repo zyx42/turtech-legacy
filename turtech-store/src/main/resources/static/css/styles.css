@@ -49,3 +49,18 @@ footer {
 footer a {
 	color: #f8f9fa !important
 }
+
+/*
+	Fixing footer on "myAccount.html" template
+*/
+#orders {
+	padding-bottom: 60px;
+}
+
+#billing {
+	padding-bottom: 20px;
+}
+
+#shipping {
+	padding-bottom: 20px;
+}

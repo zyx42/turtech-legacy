@@ -1,5 +1,5 @@
-$(document).ready(function() {0
-    
+$(document).ready(function() {
+
     $('.quantity-right-plus').click(function(e) {
         e.preventDefault();
         var id = this.id.substring(1);
