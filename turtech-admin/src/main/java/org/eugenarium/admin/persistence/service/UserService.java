@@ -1,7 +1,6 @@
 package org.eugenarium.admin.persistence.service;
 
 import org.eugenarium.admin.persistence.domain.User;
-import org.eugenarium.admin.persistence.domain.security.Role;
 
 import java.util.List;
 
@@ -14,13 +13,31 @@ import java.util.List;
 public interface UserService {
 
 	/**
+	 * Retrieves a {@code User} entity by its {@code username} field.
+	 * 
+	 * @param username - a username by which the User should be searched.
+	 * @return the {@code User} entity with the given {@code username} or
+	 *         {@literal Optional#empty()} if none found
+	 */
+	User findByUsername(String username);
+
+	/**
+	 * Retrieves a {@code User} entity by its {@code email} field.
+	 * 
+	 * @param email - an email by which the User should be searched.
+	 * @return the {@code User} entity with the given {@code email} or
+	 *         {@literal Optional#empty()} if none found
+	 */
+	User findByEmail(String email);
+
+	/**
 	 * Creates a new {@code User} entity and save it to a database.
 	 * 
 	 * @param user - the new user to be added to a database.
 	 * @return the user that was added to a database.
 	 * @throws Exception
 	 */
-	User createUser(User user, List<Role> roles) throws Exception;
+	User createUser(User user) throws Exception;
 
 	/**
 	 * Saves a {@code User} entity to a database.

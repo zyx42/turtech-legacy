@@ -40,6 +40,11 @@
                                 <th>Email</th>
                                 <th>Phone</th>
                                 <th>Enabled</th>
+                                <th>Roles</th>
+                                <th>Created Date</th>
+                                <th>Created By</th>
+                                <th>Last Modified Date</th>
+                                <th>Last Modified By</th>
                                 <th>Operation</th>
                             </tr>
                             </thead>
@@ -51,6 +56,11 @@
                                 <th>Email</th>
                                 <th>Phone</th>
                                 <th>Enabled</th>
+                                <th>Roles</th>
+                                <th>Created Date</th>
+                                <th>Created By</th>
+                                <th>Last Modified Date</th>
+                                <th>Last Modified By</th>
                                 <th>Operation</th>
                             </tr>
                             </tfoot>
@@ -63,6 +73,11 @@
                                 <td th:text="${user.email}"></td>
                                 <td th:text="${user.phone}"></td>
                                 <td th:text="${user.enabled}"></td>
+                                <td th:text="${user.roles}"></td>
+                                <td th:text="${user.createdDate}"></td>
+                                <td th:text="${user.createdBy}"></td>
+                                <td th:text="${user.lastModifiedDate}"></td>
+                                <td th:text="${user.lastModifiedBy}"></td>
                                 <td>
                                     <a th:href="@{/user/deleteUser?id=}+${user.id}"
                                        class="btn btn-danger btn-xs delete-user">

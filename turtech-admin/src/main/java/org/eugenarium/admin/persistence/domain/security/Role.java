@@ -24,7 +24,7 @@ public class Role implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
+	@Column(name = "id", nullable = false, updatable = false)
 	private Long id;
 
 	/**
@@ -71,5 +71,15 @@ public class Role implements Serializable {
 			return false;
 		Role other = (Role) obj;
 		return name.equals(other.getName());
+	}
+
+	/**
+	 * Returns a String representation of the object.
+	 * 
+	 * @return a string which represents the object.
+	 */
+	@Override
+	public String toString() {
+		return "" + name;
 	}
 }

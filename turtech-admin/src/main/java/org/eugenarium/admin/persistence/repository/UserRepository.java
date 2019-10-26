@@ -24,4 +24,13 @@ public interface UserRepository extends CrudRepository<User, Long> {
 	 *         {@literal Optional#empty()} if none found
 	 */
 	User findByUsername(String username);
+
+	/**
+	 * Retrieves a {@code User} entity by its {@code email} field.
+	 *
+	 * @param {@code email} must not be {@literal null}.
+	 * @return the {@code User} entity with the given {@code email} or
+	 *         {@literal Optional#empty()} if none found
+	 */
+	User findByEmail(String email);
 }

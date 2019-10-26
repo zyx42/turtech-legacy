@@ -1,7 +1,7 @@
 HELP.md
-target/
-**/turtech-admin/target/
-**/turtech-store/target/
+target/**
+**/turtech-admin/target/**
+**/turtech-store/target/**
 !.mvn/wrapper/maven-wrapper.jar
 !**/turtech-admin/**
 !**/turtech-store/**

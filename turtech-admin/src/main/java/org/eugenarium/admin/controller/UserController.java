@@ -1,10 +1,13 @@
 package org.eugenarium.admin.controller;
 
+import org.eugenarium.admin.persistence.domain.ShoppingCart;
 import org.eugenarium.admin.persistence.domain.User;
 import org.eugenarium.admin.persistence.domain.security.Role;
 import org.eugenarium.admin.persistence.service.RoleService;
 import org.eugenarium.admin.persistence.service.UserService;
+import org.eugenarium.admin.utility.SecurityUtility;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -41,16 +44,39 @@ public class UserController {
     }
 
     @RequestMapping(value = "/addUser", method = RequestMethod.POST)
-    public String addUserPost(@ModelAttribute("user") User user) {
+    public String addUserPost(@ModelAttribute("user") User user, Model model) throws Exception {
 
-        // setting roles for a user
-        List<Role> roles = new ArrayList<>();
-        for (Role role : user.getRoles()) {
-            roles.add(roleService.findByName(role.getName()));
+        // response in case the username doesn't exist
+		if (userService.findByUsername(user.getUsername()) != null) {
+			model.addAttribute("usernameExists", true);
+
+			return "addUser";
+		}
+
+		// response in case the email already exists
+		if (userService.findByEmail(user.getEmail()) != null) {
+			model.addAttribute("emailExists", true);
+
+			return "addUser";
         }
+        
+        // encrypting and salting the given password
+        String encryptedPassword = SecurityUtility.passwordEncoder().encode(user.getPassword());
+        user.setPassword(encryptedPassword);
+        
+        // setting roles for the user
+        List<Role> roles = new ArrayList<>();
+		for (Role role : user.getRoles()) {
+			roles.add(roleService.findByName(role.getName()));
+		}
         user.setRoles(roles);
-        // adding user to a database
-        userService.save(user);
+        
+        // providing a user with a personal shopping cart
+		ShoppingCart shoppingCart = new ShoppingCart();
+		shoppingCart.setUser(user);
+        user.setShoppingCart(shoppingCart);
+        
+        userService.createUser(user);
 
         return "redirect:userList";
     }
@@ -76,7 +102,33 @@ public class UserController {
     }
 
     @RequestMapping(value = "/updateUser", method = RequestMethod.POST)
-    public String updateUserPost(@ModelAttribute("product") User user) {
+    public String updateUserPost(@ModelAttribute("user") User user, Model model) throws Exception {
+
+        User currentUser = userService.findById(user.getId());
+
+		if (currentUser == null) {
+			throw new Exception ("User not found");
+		}
+
+        // updating password
+		if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+			BCryptPasswordEncoder passwordEncoder = SecurityUtility.passwordEncoder();
+			String dbPassword = currentUser.getPassword();
+			if(!passwordEncoder.matches(user.getPassword(), dbPassword)){
+				currentUser.setPassword(passwordEncoder.encode(user.getPassword()));
+			} else {
+				model.addAttribute("incorrectPassword", true);
+
+				return "updateUser";
+			}
+		}
+
+        // setting roles for the user
+        List<Role> roles = new ArrayList<>();
+		for (Role role : user.getRoles()) {
+			roles.add(roleService.findByName(role.getName()));
+		}
+        user.setRoles(roles);
 
         // updating a user in a database
         userService.save(user);

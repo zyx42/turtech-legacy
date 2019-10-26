@@ -4,11 +4,18 @@ import org.eugenarium.admin.persistence.domain.security.Authority;
 import org.eugenarium.admin.persistence.domain.security.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -22,6 +29,7 @@ import java.util.*;
 @Entity
 @Data
 @Table(name = "user", schema = "turtech")
+@EntityListeners(AuditingEntityListener.class)
 public class User implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
@@ -119,6 +127,42 @@ public class User implements UserDetails {
     inverseJoinColumns = @JoinColumn(name = "role_id"))
 	@JsonIgnore
 	private List<Role> roles = new ArrayList<>();
+
+	/**
+	 * An auditing field, which specifies the date on which the product was added.
+	 * It's filled automatically.
+	 */
+	@Column(name = "created_date", updatable = false)
+	@CreatedDate
+	@JsonIgnore
+	private LocalDateTime createdDate;
+
+	/**
+	 * An auditing field, which specifies the person responsible for adding the product.
+	 * It's filled automatically
+	 */
+	@Column(name = "created_by", updatable = false)
+	@CreatedBy
+	@JsonIgnore
+	private String createdBy;
+
+	/**
+	 * An auditing field, which specified the date on which the product was last modified.
+	 * It's filled automatically
+	 */
+	@Column(name = "last_modified_date")
+	@LastModifiedDate
+	@JsonIgnore
+	private LocalDateTime lastModifiedDate;
+
+	/**
+	 * An auditing field, which specified the person responsible for the last changes
+	 * to the product information. It's filled automatically.
+	 */
+	@Column(name = "last_modified_by")
+	@LastModifiedBy
+	@JsonIgnore
+	private String lastModifiedBy;
 
 	/**
 	 * Return the authorities granted to the user. Cannot return <code>null</code>.

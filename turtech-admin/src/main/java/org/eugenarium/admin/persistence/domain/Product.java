@@ -2,12 +2,20 @@ package org.eugenarium.admin.persistence.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -18,13 +26,14 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "product", schema = "turtech")
+@EntityListeners(AuditingEntityListener.class)
 public class Product implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
+	@Column(name = "id", nullable = false, updatable = false)
 	private Long id;
 
 	/**
@@ -44,7 +53,8 @@ public class Product implements Serializable {
 	 * A date on which the product was manufactured.
 	 */
 	@Column(name = "manufacture_date")
-	private Date manufactureDate;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate manufactureDate;
 
 	/**
 	 * A category to which the product belongs. Currently those are: laptops,
@@ -127,6 +137,42 @@ public class Product implements Serializable {
 	@OneToMany(mappedBy = "product")
 	@JsonIgnore
 	private List<UserReview> userReviewList;
+
+	/**
+	 * An auditing field, which specifies the date on which the product was added.
+	 * It's filled automatically.
+	 */
+	@Column(name = "created_date", nullable = false, updatable = false)
+	@CreatedDate
+	@JsonIgnore
+	private LocalDateTime createdDate;
+
+	/**
+	 * An auditing field, which specifies the person responsible for adding the product.
+	 * It's filled automatically
+	 */
+	@Column(name = "created_by", nullable = false, updatable = false)
+	@CreatedBy
+	@JsonIgnore
+	private String createdBy;
+
+	/**
+	 * An auditing field, which specified the date on which the product was last modified.
+	 * It's filled automatically
+	 */
+	@Column(name = "last_modified_date", nullable = false)
+	@LastModifiedDate
+	@JsonIgnore
+	private LocalDateTime lastModifiedDate;
+
+	/**
+	 * An auditing field, which specified the person responsible for the last changes
+	 * to the product information. It's filled automatically.
+	 */
+	@Column(name = "last_modified_by", nullable = false)
+	@LastModifiedBy
+	@JsonIgnore
+	private String lastModifiedBy;
 
 	/**
 	 * Returns the hash code value for this Product. It uses a prime number,

@@ -49,12 +49,11 @@
                                     </span>
                                 </div>
                                 <input type="text"
-                                       th:field="*{username}"
                                        class="form-control"
                                        id="username"
                                        th:value="${user.username}"
                                        required="required"
-                                       placeholder="Username" />
+                                       disabled="disabled" />
                                 </div>
                                 <small class="text-muted">Username of the user</small>
                             </div>
@@ -99,14 +98,35 @@
                                     </span>
                                 </div>
                                 <input type="email"
-                                       th:field="*{email}"
                                        class="form-control"
                                        id="email"
                                        required="required"
                                        th:value="${user.email}"
-                                       placeholder="Email" />
+                                       disabled="diabled" />
                                 </div>
                                 <small class="text-muted">Email of the user</small>
+                            </div>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="password">* Password</label>
+                            <span style="color: red;" th:if="${passwordIncorrect}">In order to change the password you have to provide a new one.</span>
+                            <div class="col-md-8">
+                                <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="fa fa-lock fa-fw" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                                <input type="password"
+                                       th:field="*{password}"
+                                       class="form-control"
+                                       id="password"
+                                       required="required"
+                                       placeholder="******" />
+                                </div>
+                                <small class="text-muted">Password of the user</small>
                             </div>
                         </div>
 
@@ -154,10 +174,10 @@
                                 <input id="authorities"
                                        type="checkbox"
                                        th:field="*{roles}"
-                                       value="0"> Admin
+                                       value="1"> Admin
                                 <input type="checkbox"
                                        th:field="*{roles}"
-                                       value="1"> User<br />
+                                       value="2"> User<br />
                                 <small class="text-muted">Authorities of the user</small>
                             </div>
                         </div>

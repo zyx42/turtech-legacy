@@ -386,10 +386,6 @@ public class AccountController {
 			@ModelAttribute("phone") String phone,
 			Model model) throws Exception {
 
-		model.addAttribute("classActiveNewAccount", true);
-		model.addAttribute("email", userEmail);
-		model.addAttribute("username", username);
-
 		// response in case the username doesn't exist
 		if (userService.findByUsername(username) != null) {
 			model.addAttribute("usernameExists", true);
@@ -415,11 +411,11 @@ public class AccountController {
 		String encryptedPassword = SecurityUtility.passwordEncoder().encode(password);
 		user.setPassword(encryptedPassword);
 
-		// setting the roles for the user
+		// setting the role for the user
 		Role role = roleService.findByName("ROLE_USER");
-		List<Role> roleSet = new ArrayList<>();
-		roleSet.add(role);
-		user.setRoles(roleSet);
+		List<Role> roles = new ArrayList<>();
+		roles.add(role);
+		user.setRoles(roles);
 		
 		// providing a user with a personal shopping cart
 		ShoppingCart shoppingCart = new ShoppingCart();
@@ -500,7 +496,7 @@ public class AccountController {
 		}
 
 		// updating password
-		if (newPassword != null && !newPassword.isEmpty() && !newPassword.equals("")){
+		if (newPassword != null && !newPassword.isEmpty()) {
 			BCryptPasswordEncoder passwordEncoder = SecurityUtility.passwordEncoder();
 			String dbPassword = currentUser.getPassword();
 			if(passwordEncoder.matches(user.getPassword(), dbPassword)){

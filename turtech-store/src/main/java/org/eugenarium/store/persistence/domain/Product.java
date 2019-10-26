@@ -2,12 +2,13 @@ package org.eugenarium.store.persistence.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -24,7 +25,7 @@ public class Product implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
+	@Column(name = "id", nullable = false, updatable = false)
 	private Long id;
 
 	/**
@@ -44,7 +45,7 @@ public class Product implements Serializable {
 	 * A date on which the product was manufactured.
 	 */
 	@Column(name = "manufacture_date")
-	private Date manufactureDate;
+	private LocalDate manufactureDate;
 
 	/**
 	 * A category to which the product belongs. Currently those are: laptops,

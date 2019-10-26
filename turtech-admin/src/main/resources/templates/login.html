@@ -9,9 +9,9 @@
     <div class="card card-login mx-auto mt-5">
       <div class="card-header">Sign in</div>
           <div class="card-body">
-            <div class="bg-danger"
+            <div class="alert alert-danger"
                  th:if="${param.error}">Invalid username and password.</div>
-            <div class="bg-danger"
+            <div class="alert alert-danger"
                  th:if="${param.logout}">You have been logged out.</div>
             <form th:action="@{/login}" method="post">
               <div class="form-group">

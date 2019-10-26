@@ -41,6 +41,10 @@
                     <th>List Price</th>
                     <th>Our Price</th>
                     <th>Discontinued</th>
+                    <th>Created Date</th>
+                    <th>Created By</th>
+                    <th>Last Modified Date</th>
+                    <th>Last Modified By</th>
                     <th>Operation</th>
                   </tr>
                   </thead>
@@ -53,6 +57,10 @@
                     <th>List Price</th>
                     <th>Our Price</th>
                     <th>Discontinued</th>
+                    <th>Created Date</th>
+                    <th>Created By</th>
+                    <th>Last Modified Date</th>
+                    <th>Last Modified By</th>
                     <th>Operation</th>
                   </tr>
                   </tfoot>
@@ -66,6 +74,10 @@
                     <td th:text="${product.listPrice}"></td>
                     <td th:text="${product.ourPrice}"></td>
                     <td th:text="${product.discontinued}"></td>
+                    <td th:text="${product.createdDate}"></td>
+                    <td th:text="${product.createdBy}"></td>
+                    <td th:text="${product.lastModifiedDate}"></td>
+                    <td th:text="${product.lastModifiedBy}"></td>
                     <td>
                       <a th:href="@{/product/deleteProduct?id=}+${product.id}"
                         class="btn btn-danger btn-xs">

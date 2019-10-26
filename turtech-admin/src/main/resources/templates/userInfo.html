@@ -30,11 +30,12 @@
                 <div class="row">
                     <div class="col-9">
                         <h3 th:text="${user.username}"></h3>
-                        <small>(<a th:href="@{/user/updateUser?id=}+${user.id}">Edit</a>)</small>
+                        <a th:href="@{/user/updateUser?id=}+${user.id}">Edit</a>
                         <div class="row">
                             <div class="col-6">
                                 <p><strong>First Name: </strong><span th:text="${user.firstName}"></span></p>
                                 <p><strong>Last Name: </strong><span th:text="${user.lastName}"></span></p>
+                                <p><Strong>User Authorities: </Strong><span th:text="${user.roles}"></span></p>
                             </div>
                             <div class="col-6">
                                 <p><strong>Email: </strong><span th:text="${user.email}"></span></p>
@@ -42,8 +43,6 @@
                                 <p><strong>Enabled: </strong><span th:text="${user.enabled}"></span></p>
                             </div>
                         </div>
-
-                        <!-- <p><Strong>User Authorities: </Strong><span th:utext="${user.roles}"></span></p> -->
                     </div>
 
                 </div>

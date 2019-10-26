@@ -1,8 +1,6 @@
 package org.eugenarium.admin.persistence.service.impl;
 
 import org.eugenarium.admin.persistence.domain.User;
-import org.eugenarium.admin.persistence.domain.security.Role;
-import org.eugenarium.admin.persistence.repository.RoleRepository;
 import org.eugenarium.admin.persistence.repository.UserRepository;
 import org.eugenarium.admin.persistence.service.UserService;
 import org.slf4j.Logger;
@@ -11,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,12 +26,33 @@ public class UserServiceImpl implements UserService {
 	
 	private final UserRepository userRepository;
 	
-	private final RoleRepository roleRepository;
-
 	@Autowired
-	public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
+	public UserServiceImpl(UserRepository userRepository) {
 		this.userRepository = userRepository;
-		this.roleRepository = roleRepository;
+	}
+
+	/**
+	 * Retrieves a {@code User} entity by its {@code username} field.
+	 * 
+	 * @param username - a username by which the User should be searched.
+	 * @return the {@code User} entity with the given {@code username} or
+	 *         {@literal Optional#empty()} if none found
+	 */
+	@Override
+	public User findByUsername(String username) {
+		return userRepository.findByUsername(username);
+	}
+
+	/**
+	 * Retrieves a {@code User} entity by its {@code email} field.
+	 * 
+	 * @param email - an email by which the User should be searched.
+	 * @return the {@code User} entity with the given {@code email} or
+	 *         {@literal Optional#empty()} if none found
+	 */
+	@Override
+	public User findByEmail(String email) {
+		return userRepository.findByEmail(email);
 	}
 
 	/**
@@ -43,17 +63,15 @@ public class UserServiceImpl implements UserService {
 	 * @throws Exception
 	 */
 	@Override
-	public User createUser(User user, List<Role> roles) {
+	public User createUser(User user) {
 		User localUser = userRepository.findByUsername(user.getUsername());
 
 		if(localUser != null) {
 			LOG.info("user {} already exists. Nothing will be done.", user.getUsername());
 		} else {
-			for (Role role : roles) {
-				roleRepository.save(role);
-			}
 
-			user.getRoles().addAll(roles);
+			user.setUserShippingList(new ArrayList<>());
+			user.setUserPaymentList(new ArrayList<>());
 
 			localUser = userRepository.save(user);
 		}
@@ -62,7 +80,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	/**
-	 * Saves a {@code User} entity to a database.
+	 * Persists a {@code User} entity to a database or merges it.
 	 * 
 	 * @param user - a user to be saved
 	 * @return the user that was saved.
