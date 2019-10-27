@@ -87,6 +87,22 @@ public class ProductController {
 	@RequestMapping(value = "/updateProduct", method = RequestMethod.POST)
 	public String updateProductPost(@ModelAttribute("product") Product product) {
 
+		Product currentProduct = productService.findById(product.getId());
+
+		// updating product data
+		currentProduct.setName(product.getName());
+		currentProduct.setManufacturer(product.getManufacturer());
+		currentProduct.setManufactureDate(product.getManufactureDate());
+		currentProduct.setCategory(product.getCategory());
+		currentProduct.setCondition(product.getCondition());
+		currentProduct.setShippingWeight(product.getShippingWeight());
+		currentProduct.setListPrice(product.getListPrice());
+		currentProduct.setOurPrice(product.getOurPrice());
+		currentProduct.setDescription(product.getDescription());
+		currentProduct.setSpecifications(product.getSpecifications());
+		currentProduct.setInStockNumber(product.getInStockNumber());
+		currentProduct.setDiscontinued(product.isDiscontinued());
+
 		// updating a product in a database
 		productService.save(product);
 		

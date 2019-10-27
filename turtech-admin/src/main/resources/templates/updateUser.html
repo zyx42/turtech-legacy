@@ -41,6 +41,10 @@
                         <!-- Username -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="username">* Username</label>
+                            <div class="alert alert-danger" th:if="${usernameExists}">
+								<strong>Username already exists!</strong> Please enter another
+								username.
+							</div>
                             <div class="col-md-8">
                                 <div class="input-group">
                                 <div class="input-group-prepend">
@@ -49,11 +53,11 @@
                                     </span>
                                 </div>
                                 <input type="text"
+                                       th:field="*{username}"
                                        class="form-control"
                                        id="username"
                                        th:value="${user.username}"
-                                       required="required"
-                                       disabled="disabled" />
+                                       required="required" />
                                 </div>
                                 <small class="text-muted">Username of the user</small>
                             </div>
@@ -90,6 +94,10 @@
                         <!-- Email -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="email">* Email</label>
+                            <div class="alert alert-danger" th:if="${emailExists}">
+								<strong>Email already exists!</strong> Please enter another
+								email.
+							</div>
                             <div class="col-md-8">
                                 <div class="input-group">
                                 <div class="input-group-prepend">
@@ -98,11 +106,11 @@
                                     </span>
                                 </div>
                                 <input type="email"
+                                       th:field="*{email}"
                                        class="form-control"
                                        id="email"
                                        required="required"
-                                       th:value="${user.email}"
-                                       disabled="diabled" />
+                                       th:value="${user.email}" />
                                 </div>
                                 <small class="text-muted">Email of the user</small>
                             </div>
@@ -123,7 +131,6 @@
                                        th:field="*{password}"
                                        class="form-control"
                                        id="password"
-                                       required="required"
                                        placeholder="******" />
                                 </div>
                                 <small class="text-muted">Password of the user</small>

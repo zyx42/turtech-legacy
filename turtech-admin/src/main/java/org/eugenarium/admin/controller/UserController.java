@@ -102,20 +102,38 @@ public class UserController {
     }
 
     @RequestMapping(value = "/updateUser", method = RequestMethod.POST)
-    public String updateUserPost(@ModelAttribute("user") User user, Model model) throws Exception {
+    public String updateUserPost(@ModelAttribute("user") User user,
+                                @ModelAttribute("password") String password,
+                                Model model) throws Exception {
 
         User currentUser = userService.findById(user.getId());
 
 		if (currentUser == null) {
 			throw new Exception ("User not found");
+        }
+
+        // check if username already exists
+		if (userService.findByUsername(user.getUsername())!=null) {
+			if (!userService.findByUsername(user.getUsername()).getId().equals(currentUser.getId())) {
+				model.addAttribute("usernameExists", true);
+				return "updateUser";
+			}
+        }
+
+        // check if email already exists
+		if (userService.findByEmail(user.getEmail())!=null) {
+			if(!userService.findByEmail(user.getEmail()).getId().equals(currentUser.getId())) {
+				model.addAttribute("emailExists", true);
+				return "updateUser";
+			}
 		}
 
         // updating password
-		if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+		if (password != null && !password.isEmpty()) {
 			BCryptPasswordEncoder passwordEncoder = SecurityUtility.passwordEncoder();
 			String dbPassword = currentUser.getPassword();
-			if(!passwordEncoder.matches(user.getPassword(), dbPassword)){
-				currentUser.setPassword(passwordEncoder.encode(user.getPassword()));
+			if(!passwordEncoder.matches(password, dbPassword)){
+				currentUser.setPassword(passwordEncoder.encode(password));
 			} else {
 				model.addAttribute("incorrectPassword", true);
 
@@ -129,6 +147,13 @@ public class UserController {
 			roles.add(roleService.findByName(role.getName()));
 		}
         user.setRoles(roles);
+
+        // updating user data
+        currentUser.setFirstName(user.getFirstName());
+		currentUser.setLastName(user.getLastName());
+		currentUser.setUsername(user.getUsername());
+		currentUser.setEmail(user.getEmail());
+		currentUser.setPhone(user.getPhone());
 
         // updating a user in a database
         userService.save(user);

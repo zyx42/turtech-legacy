@@ -478,18 +478,19 @@ public class AccountController {
 			throw new Exception ("User not found");
 		}
 
-		// check if email already exists
-		if (userService.findByEmail(user.getEmail())!=null) {
-			if(!userService.findByEmail(user.getEmail()).getId().equals(currentUser.getId())) {
-				model.addAttribute("emailExists", true);
-				return "myAccount";
-			}
-		}
-
 		// check if username already exists
 		if (userService.findByUsername(user.getUsername())!=null) {
 			if (!userService.findByUsername(user.getUsername()).getId().equals(currentUser.getId())) {
 				model.addAttribute("usernameExists", true);
+				model.addAttribute("classActiveProfile", true);
+				return "myAccount";
+			}
+		}
+
+		// check if email already exists
+		if (userService.findByEmail(user.getEmail())!=null) {
+			if(!userService.findByEmail(user.getEmail()).getId().equals(currentUser.getId())) {
+				model.addAttribute("emailExists", true);
 				model.addAttribute("classActiveProfile", true);
 				return "myAccount";
 			}
@@ -509,6 +510,7 @@ public class AccountController {
 			}
 		}
 
+		// updating user data
 		currentUser.setFirstName(user.getFirstName());
 		currentUser.setLastName(user.getLastName());
 		currentUser.setUsername(user.getUsername());
