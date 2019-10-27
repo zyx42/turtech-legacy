@@ -151,7 +151,7 @@ VALUES
 	('ROLE_ADMIN'),
 	('ROLE_USER');
 
-DROP TABLE IF EXISTS turtech.user_review cascade;
+DROP TABLE IF EXISTS turtech.user_review CASCADE;
 
 CREATE TABLE turtech.user_review (
 	id SERIAL PRIMARY KEY,
@@ -209,7 +209,7 @@ CREATE TABLE turtech.password_reset_token (
   id SERIAL PRIMARY KEY,
   expiry_date TIMESTAMP DEFAULT NULL,
   token VARCHAR(255) DEFAULT NULL,
-  user_id BIGINT NOT NULL REFERENCES "user" (id)
+  user_id BIGINT NOT NULL REFERENCES "user" (id) ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS turtech.payment;

@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -406,6 +407,8 @@ public class AccountController {
 		user.setFirstName(firstName);
 		user.setLastName(lastName);
 		user.setPhone(phone);
+		user.setCreatedDate(LocalDateTime.now());
+		user.setCreatedBy("oneself");
 
 		// encrypting and salting the given password
 		String encryptedPassword = SecurityUtility.passwordEncoder().encode(password);
@@ -516,6 +519,8 @@ public class AccountController {
 		currentUser.setUsername(user.getUsername());
 		currentUser.setEmail(user.getEmail());
 		currentUser.setPhone(user.getPhone());
+		currentUser.setLastModifiedDate(LocalDateTime.now());
+		currentUser.setLastModifiedBy("oneself");
 
 		userService.save(currentUser);
 

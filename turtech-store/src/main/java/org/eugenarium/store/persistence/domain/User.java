@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -119,6 +120,38 @@ public class User implements UserDetails {
     inverseJoinColumns = @JoinColumn(name = "role_id"))
 	@JsonIgnore
 	private List<Role> roles = new ArrayList<>();
+
+		/**
+	 * An auditing field, which specifies the date on which the product was added.
+	 * It's filled automatically.
+	 */
+	@Column(name = "created_date", updatable = false)
+	@JsonIgnore
+	private LocalDateTime createdDate;
+
+	/**
+	 * An auditing field, which specifies the person responsible for adding the product.
+	 * It's filled automatically
+	 */
+	@Column(name = "created_by", updatable = false)
+	@JsonIgnore
+	private String createdBy;
+
+	/**
+	 * An auditing field, which specified the date on which the product was last modified.
+	 * It's filled automatically
+	 */
+	@Column(name = "last_modified_date")
+	@JsonIgnore
+	private LocalDateTime lastModifiedDate;
+
+	/**
+	 * An auditing field, which specified the person responsible for the last changes
+	 * to the product information. It's filled automatically.
+	 */
+	@Column(name = "last_modified_by")
+	@JsonIgnore
+	private String lastModifiedBy;
 
 	/**
 	 * Return the authorities granted to the user. Cannot return <code>null</code>.
