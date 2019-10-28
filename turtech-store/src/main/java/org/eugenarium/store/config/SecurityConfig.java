@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -46,12 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		"/faq",
 		"/contact",
 		"/searchByCategory",
-		"/searchProduct",
-		"/css/**",
-		"/images/**",
-		"/webjars/**",
-		"/js/**",
-		"/favicon.png"
+		"/searchProduct"
 	};
 
 	@Override
@@ -80,4 +76,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 					.rememberMeCookieName("remember-me")
 					.tokenValiditySeconds(24 * 60 * 60);
 	}
+
+	@Override
+    public void configure(WebSecurity web) throws Exception {
+
+        web.ignoring()
+            .antMatchers("/css/**")
+            .antMatchers("/images/**")
+            .antMatchers("/js/**")
+			.antMatchers("/webjars/**")
+			.antMatchers("/favicon.png");
+    	}
 }

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/common :: common-header"></head>
+
+<body>
+
+	<!-- Navigation -->
+	<nav th:replace="fragments/common :: common-navbar"></nav>
+
+	<!-- Page Content -->
+	<div class="jumbotron">
+		<h1 class="display-1">400</h1>
+		<h3 class="lead">Bad Request</h3>
+		<p>Bad request. The request path is invalid. Here are some helpful
+			links to get you back on track:</p>
+		<ul>
+			<li><a th:href="@{/}">Home</a></li>
+			<li><a th:href="@{/products}">Products</a></li>
+			<li><a th:href="@{/contact}">Contact</a></li>
+			<li><a th:href="@{/faq}">FAQ</a></li>
+			<li><a th:href="@{/hours}">Hours</a></li>
+		</ul>
+	</div>
+	<!-- /.jumbotron -->
+
+	<!-- Footer -->
+	<footer th:replace="fragments/common :: common-footer"></footer>
+
+	<div th:replace="fragments/common :: common-bottom"></div>
+</body>
+</html>

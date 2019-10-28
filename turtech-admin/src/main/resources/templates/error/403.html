@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/common :: common-header"></head>
+
+<body id="page-top">
+
+  <div th:replace="fragments/common :: common-navbar"></div>
+
+  <div id="wrapper">
+
+    <!-- Sidebar -->
+    <div th:replace="fragments/common :: common-sidebar"></div>
+
+    <div id="content-wrapper">
+
+      <div class="container-fluid">
+
+        <!-- Breadcrumbs-->
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page"><a href="#">404</a></li>
+          </ol>
+        </nav>
+
+        <div class="jumbotron">
+          <h1 class="display-1">403</h1>
+          <p>The page you tried to reach is forbidden for you. Here are some
+            helpful links to get you back on track:</p>
+          <ul>
+            <li><a th:href="@{/}">Home</a></li>
+            <li><a th:href="@{/product/productList}">Products</a></li>
+            <li><a th:href="@{/user/userList}">Users</a></li>
+          </ul>
+        </div>
+        <!-- /.jumbotron -->
+
+      </div>
+      <!-- /.container-fluid -->
+
+      <!-- Sticky Footer -->
+      <footer th:replace="fragments/common :: common-footer" class="sticky-footer"></footer>
+
+    </div>
+    <!-- /.content-wrapper -->
+
+  </div>
+  <!-- /#wrapper -->
+
+  <div th:replace="fragments/common :: common-bottom"></div>
+
+</body>
+
+</html>
