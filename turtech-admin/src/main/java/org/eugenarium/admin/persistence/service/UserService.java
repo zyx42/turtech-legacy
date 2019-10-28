@@ -68,5 +68,5 @@ public interface UserService {
     * 
     * @param {@code id} must not be {@literal null}.
     */
-	void deleteById(Long id);
+	void delete(User user);
 }

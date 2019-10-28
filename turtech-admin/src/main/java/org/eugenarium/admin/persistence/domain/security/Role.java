@@ -37,7 +37,7 @@ public class Role implements Serializable {
 	 * A set of users to which a particular role belongs. A single user
 	 * can have multiple roles and a single role can encompass multiple users.
 	 */
-	@ManyToMany(mappedBy = "roles", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
 	private Set<User> users = new HashSet<>();
 
 	/**

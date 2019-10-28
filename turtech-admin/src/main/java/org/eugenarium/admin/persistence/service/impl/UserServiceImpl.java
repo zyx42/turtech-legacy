@@ -115,7 +115,9 @@ public class UserServiceImpl implements UserService {
     * 
     * @param {@code id} must not be {@literal null}.
     */
-	public void deleteById(Long id) {
-		userRepository.deleteById(id);
+	public void delete(User user) {
+
+		user.getRoles().forEach(role -> role.getUsers().remove(user));
+		userRepository.delete(user);
 	}
 }

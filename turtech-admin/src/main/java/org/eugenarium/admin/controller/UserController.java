@@ -172,9 +172,14 @@ public class UserController {
     }
 
     @RequestMapping(value = "/deleteUser")
-    public String deleteUser(@PathParam("id") Long id) {
+    public String deleteUser(@PathParam("id") Long id) throws Exception {
 
-        userService.deleteById(id);
+        User user = userService.findById(id);
+        if (user == null) {
+            throw new Exception ("User not found");
+        } else {
+            userService.delete(user);
+        }
 
         return "forward:/user/userList";
     }
