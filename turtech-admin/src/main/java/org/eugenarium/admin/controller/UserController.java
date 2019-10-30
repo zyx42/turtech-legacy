@@ -10,11 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
 import java.util.ArrayList;
@@ -44,7 +46,14 @@ public class UserController {
     }
 
     @RequestMapping(value = "/addUser", method = RequestMethod.POST)
-    public String addUserPost(@ModelAttribute("user") User user, Model model) throws Exception {
+    public String addUserPost(@ModelAttribute("user") @Valid User user,
+        BindingResult bindingResult,
+        Model model) throws Exception {
+
+        // response in case of validation failure
+        if (bindingResult.hasErrors()) {
+            return "addUser";
+        }
 
         // response in case the username doesn't exist
 		if (userService.findByUsername(user.getUsername()) != null) {
@@ -102,9 +111,14 @@ public class UserController {
     }
 
     @RequestMapping(value = "/updateUser", method = RequestMethod.POST)
-    public String updateUserPost(@ModelAttribute("user") User user,
-                                @ModelAttribute("password") String password,
+    public String updateUserPost(@ModelAttribute("user") @Valid User user,
+                                BindingResult bindingResult,
                                 Model model) throws Exception {
+
+        // response in case of validation failure
+		if (bindingResult.hasErrors()) {
+			return "updateUser";
+		}
 
         User currentUser = userService.findById(user.getId());
 
@@ -129,11 +143,11 @@ public class UserController {
 		}
 
         // updating password
-		if (password != null && !password.isEmpty()) {
+		if (user.getPassword() != null && !user.getPassword().isEmpty()) {
 			BCryptPasswordEncoder passwordEncoder = SecurityUtility.passwordEncoder();
 			String dbPassword = currentUser.getPassword();
-			if(!passwordEncoder.matches(password, dbPassword)){
-				currentUser.setPassword(passwordEncoder.encode(password));
+			if(!passwordEncoder.matches(user.getPassword(), dbPassword)){
+				currentUser.setPassword(passwordEncoder.encode(user.getPassword()));
 			} else {
 				model.addAttribute("incorrectPassword", true);
 

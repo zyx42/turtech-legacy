@@ -38,6 +38,9 @@
                         <!-- Name -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="name">* Name</label>
+                            <span th:if="${#fields.hasErrors('name')}"
+                                  class="text-danger"
+                                  th:errors="*{name}"></span>
                             <div class="col-md-8">
                                 <div class="input-group">
                                 <div class="input-group-prepend">
@@ -50,7 +53,8 @@
                                        class="form-control"
                                        id="name"
                                        required="required"
-                                       placeholder="Name" />
+                                       placeholder="Name"
+                                       th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'" />
                                 </div>
                                 <small class="text-muted">Name of the product</small>
                             </div>
@@ -59,6 +63,9 @@
                         <!-- Manufacturer -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="manufacturer">* Manufacturer</label>
+                            <span th:if="${#fields.hasErrors('manufacturer')}"
+                                  class="text-danger"
+                                  th:errors="*{manufacturer}"></span>
                             <div class="col-md-8">
                                 <div class="input-group">
                                 <div class="input-group-prepend">
@@ -71,7 +78,8 @@
                                        class="form-control"
                                        id="manufacturer"
                                        placeholder="Manufacturer"
-                                       required="required" />
+                                       required="required"
+                                       th:classappend="${#fields.hasErrors('manufacturer')} ? 'is-invalid'" />
                                 </div>
                                 <small class="text-muted">Manufacturer of the product</small>
                             </div>
@@ -80,6 +88,9 @@
                         <!-- Manufacture date -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="manufactureDate">Manufacture date</label>
+                            <span th:if="${#fields.hasErrors('manufactureDate')}"
+                                  class="text-danger"
+                                  th:errors="*{manufactureDate}"></span>
                             <div class="col-md-8">
                                 <div class="input-group">
                                 <div class="input-group-prepend">
@@ -91,7 +102,9 @@
                                        th:field="*{manufactureDate}"
                                        class="form-control"
                                        id="manufactureDate"
-                                       placeholder="yyyy-MM-dd" />
+                                       placeholder="yyyy-MM-dd"
+                                       required="required"
+                                       th:classappend="${#fields.hasErrors('manufactureDate')} ? 'is-invalid'" />
                                 </div>
                                 <small class="text-muted">Format: yyyy-MM-dd</small>
                             </div>
@@ -100,11 +113,15 @@
                         <!-- Category -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="category">* Category</label>
+                            <span th:if="${#fields.hasErrors('category')}"
+                                  class="text-danger"
+                                  th:errors="*{category}"></span>
                             <div class="col-md-8">
                                 <select th:field="*{category}"
                                         id="category"
                                         required="required"
-                                        class="form-control">
+                                        class="form-control"
+                                        th:classappend="${#fields.hasErrors('category')} ? 'is-invalid'">
                                     <option value=""
                                             selected="selected"
                                             disabled="disabled">Please select an option...</option>
@@ -121,11 +138,15 @@
                         <!-- Condition -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="condition">* Condition</label>
+                            <span th:if="${#fields.hasErrors('condition')}"
+                                  class="text-danger"
+                                  th:errors="*{condition}"></span>
                             <div class="col-md-8">
                                 <select id="condition"
                                         th:field="*{condition}"
                                         required="required"
-                                        class="form-control">
+                                        class="form-control"
+                                        th:classappend="${#fields.hasErrors('condition')} ? 'is-invalid'">
                                     <option value=""
                                             selected="selected"
                                             disabled="disabled">Please select an option...</option>
@@ -141,7 +162,10 @@
 
                         <!-- Shipping weight -->
                         <div class="form-group">
-                            <label class="col-md-4 control-label" for="shippingWeight">Shipping weight(kg)</label>
+                            <label class="col-md-4 control-label" for="shippingWeight">* Shipping weight(kg)</label>
+                            <span th:if="${#fields.hasErrors('shippingWeight')}"
+                                  class="text-danger"
+                                  th:errors="*{shippingWeight}"></span>
                             <div class="col-md-8">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
@@ -154,7 +178,9 @@
                                            step="0.01"
                                            class="form-control"
                                            id="shippingWeight"
-                                           placeholder="Shipping weight" />
+                                           placeholder="Shipping weight"
+                                           required="required"
+                                           th:classappend="${#fields.hasErrors('shippingWeight')} ? 'is-invalid'" />
                                 </div>
                                 <small class="text-muted">Shipping weight of the product in kilograms</small>
                             </div>
@@ -163,6 +189,9 @@
                         <!-- List price -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="listPrice">* List price</label>
+                            <span th:if="${#fields.hasErrors('listPrice')}"
+                                  class="text-danger"
+                                  th:errors="*{listPrice}"></span>
                             <div class="col-md-8">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
@@ -176,7 +205,8 @@
                                            class="form-control"
                                            id="listPrice"
                                            placeholder="List price"
-                                           required="required" />
+                                           required="required"
+                                           th:classappend="${#fields.hasErrors('listPrice')} ? 'is-invalid'" />
                                 </div>
                                 <small class="text-muted">List price of the product in dollars</small>
                             </div>
@@ -185,6 +215,9 @@
                         <!-- Our price -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="ourPrice">* Our price</label>
+                            <span th:if="${#fields.hasErrors('ourPrice')}"
+                                  class="text-danger"
+                                  th:errors="*{ourPrice}"></span>
                             <div class="col-md-8">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
@@ -198,7 +231,8 @@
                                            class="form-control"
                                            id="ourPrice"
                                            placeholder="Our price"
-                                           required="required" />
+                                           required="required"
+                                           th:classappend="${#fields.hasErrors('ourPrice')} ? 'is-invalid'" />
                                 </div>
                                 <small class="text-muted">Our special price of the product in dollars</small>
                             </div>
@@ -207,6 +241,9 @@
                         <!-- In-stock number -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="inStockNumber">* Number in stock</label>
+                            <span th:if="${#fields.hasErrors('inStockNumber')}"
+                                  class="text-danger"
+                                  th:errors="*{inStockNumber}"></span>
                             <div class="col-md-8">
                                 <div class="input-group">
                                 <div class="input-group-prepend">
@@ -219,7 +256,8 @@
                                        class="form-control"
                                        id="inStockNumber"
                                        placeholder="Number of in-stock copies"
-                                       required="required" />
+                                       required="required"
+                                       th:classappend="${#fields.hasErrors('inStockNumber')} ? 'is-invalid'" />
                                 </div>
                                 <small class="text-muted">Number of in-stock items</small>
                             </div>
@@ -228,6 +266,9 @@
                         <!-- Discontinued -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="discontinued">Discontinued</label>
+                            <span th:if="${#fields.hasErrors('discontinued')}"
+                                  class="text-danger"
+                                  th:errors="*{discontinued}"></span>
                             <div class="col-md-8">
                                 <label><input value="false"
                                               type="radio"
@@ -243,12 +284,16 @@
                         <!-- Description -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="description">Description</label>
+                            <span th:if="${#fields.hasErrors('description')}"
+                                  class="text-danger"
+                                  th:errors="*{description}"></span>
                             <div class="col-md-8">
-                        <textarea th:field="*{description}"
+                            <textarea th:field="*{description}"
                                   rows="5"
                                   class="form-control"
                                   id="description"
-                                  placeholder="Description..."></textarea>
+                                  placeholder="Description..."
+                                  th:classappend="${#fields.hasErrors('description')} ? 'is-invalid'"></textarea>
                                 <small class="text-muted">Description of the product</small>
                             </div>
                         </div>
@@ -256,12 +301,16 @@
                         <!-- Specifications -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="specifications">Specifications</label>
+                            <span th:if="${#fields.hasErrors('specifications')}"
+                                  class="text-danger"
+                                  th:errors="*{specifications}"></span>
                             <div class="col-md-8">
-                        <textarea th:field="*{specifications}"
+                            <textarea th:field="*{specifications}"
                                   rows="5"
                                   class="form-control"
                                   id="specifications"
-                                  placeholder="Specifications..."></textarea>
+                                  placeholder="Specifications..."
+                                  th:classappend="${#fields.hasErrors('specifications')} ? 'is-invalid'"></textarea>
                                 <small class="text-muted">Specifications of the product</small>
                             </div>
                         </div>

@@ -41,10 +41,11 @@
                         <!-- Username -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="username">* Username</label>
-                            <div class="alert alert-danger" th:if="${usernameExists}">
-								<strong>Username already exists!</strong> Please enter another
-								username.
-							</div>
+                            <span th:if="${usernameExists}"
+                                  class="text-danger">Username already exists. Choose a different one.</span>
+                            <span th:if="${#fields.hasErrors('username')}"
+                                  class="text-danger"
+                                  th:errors="*{username}"></span>
                             <div class="col-md-8">
                                 <div class="input-group">
                                 <div class="input-group-prepend">
@@ -57,7 +58,8 @@
                                        class="form-control"
                                        id="username"
                                        th:value="${user.username}"
-                                       required="required" />
+                                       required="required"
+                                       th:classappend="${#fields.hasErrors('username')} ? 'is-invalid'" />
                                 </div>
                                 <small class="text-muted">Username of the user</small>
                             </div>
@@ -66,13 +68,17 @@
                         <!-- First name -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="firstName">First name</label>
+                            <span th:if="${#fields.hasErrors('firstName')}"
+                                  class="text-danger"
+                                  th:errors="*{firstName}"></span>
                             <div class="col-md-8">
                                 <input type="text"
                                        th:field="*{firstName}"
                                        class="form-control"
                                        id="firstName"
                                        th:value="${user.firstName}"
-                                       placeholder="First name" />
+                                       placeholder="First name"
+                                       th:classappend="${#fields.hasErrors('firstName')} ? 'is-invalid'" />
                                 <small class="text-muted">First name of the user</small>
                             </div>
                         </div>
@@ -80,13 +86,17 @@
                         <!-- Last name -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="lastName">Last name</label>
+                            <span th:if="${#fields.hasErrors('lastName')}"
+                                  class="text-danger"
+                                  th:errors="*{lastName}"></span>
                             <div class="col-md-8">
                                 <input type="text"
                                        th:field="*{lastName}"
                                        class="form-control"
                                        id="lastName"
                                        th:value="${user.lastName}"
-                                       placeholder="Last name" />
+                                       placeholder="Last name"
+                                       th:classappend="${#fields.hasErrors('lastName')} ? 'is-invalid'" />
                                 <small class="text-muted">Last name of the user</small>
                             </div>
                         </div>
@@ -94,10 +104,11 @@
                         <!-- Email -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="email">* Email</label>
-                            <div class="alert alert-danger" th:if="${emailExists}">
-								<strong>Email already exists!</strong> Please enter another
-								email.
-							</div>
+                            <span class="text-danger"
+                                  th:if="${emailExists}">Email already exists. Choose a different one.</span>
+                            <span th:if="${#fields.hasErrors('email')}"
+                                  class="text-danger"
+                                  th:errors="*{email}"></span>
                             <div class="col-md-8">
                                 <div class="input-group">
                                 <div class="input-group-prepend">
@@ -110,7 +121,8 @@
                                        class="form-control"
                                        id="email"
                                        required="required"
-                                       th:value="${user.email}" />
+                                       th:value="${user.email}"
+                                       th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'" />
                                 </div>
                                 <small class="text-muted">Email of the user</small>
                             </div>
@@ -119,7 +131,11 @@
                         <!-- Password -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="password">* Password</label>
-                            <span style="color: red;" th:if="${passwordIncorrect}">In order to change the password you have to provide a new one.</span>
+                            <span class="text-danger"
+                                  th:if="${passwordIncorrect}">In order to change the password you have to provide a new one.</span>
+                            <span th:if="${#fields.hasErrors('password')}"
+                                  class="text-danger"
+                                  th:errors="*{password}"></span>
                             <div class="col-md-8">
                                 <div class="input-group">
                                 <div class="input-group-prepend">
@@ -129,11 +145,12 @@
                                 </div>
                                 <input type="password"
                                        th:field="*{password}"
+                                       th:value="${user.password}"
                                        class="form-control"
                                        id="password"
-                                       placeholder="******" />
+                                       th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'" />
                                 </div>
-                                <small class="text-muted">Password of the user</small>
+                                <small class="text-muted">Password of the user. It should start with a letter which can be followed by alphanumeric or alphabet characters, 8 through 32 characters long</small>
                             </div>
                         </div>
 
@@ -148,13 +165,14 @@
                                     </span>
                                 </div>
                                 <input type="number"
+                                       pattern="/^+\d{1,2}(\d{3})\d{3}-\d{4}$/"
                                        th:field="*{phone}"
                                        class="form-control"
                                        id="phone"
                                        th:value="${user.phone}"
-                                       placeholder="Phone" />
+                                       placeholder="Phone"/>
                                 </div>
-                                <small class="text-muted">Phone number of the user</small>
+                                <small class="text-muted">Phone number of the user. Pattern: +XX(XXX)XXX-XXXX or +X(XXX)XXX-XXXX</small>
                             </div>
                         </div>
 
@@ -176,7 +194,10 @@
 
                         <!-- Authorities -->
                         <div class="form-group">
-                            <label class="col-md-2 control-label" for="authorities">Authorities</label>
+                            <label class="col-md-2 control-label" for="authorities">* Authorities</label>
+                            <span th:if="${#fields.hasErrors('roles')}"
+                                  class="text-danger"
+                                  th:errors="*{roles}"></span>
                             <div class="col-md-8">
                                 <input id="authorities"
                                        type="checkbox"

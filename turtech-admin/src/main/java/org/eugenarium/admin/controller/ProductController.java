@@ -5,12 +5,14 @@ import org.eugenarium.admin.persistence.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
 import java.io.BufferedOutputStream;
@@ -42,7 +44,13 @@ public class ProductController {
 	}
 
 	@RequestMapping(value = "/addProduct", method = RequestMethod.POST)
-	public String addProductPost(@ModelAttribute("product") Product product) {
+	public String addProductPost(@ModelAttribute("product") @Valid Product product,
+		BindingResult bindingResult) {
+
+		// response in case of validation failure
+		if (bindingResult.hasErrors()) {
+			return "addProduct";
+		}
 
 		// adding the product to a database
 		productService.save(product);
@@ -85,7 +93,13 @@ public class ProductController {
 	}
 	
 	@RequestMapping(value = "/updateProduct", method = RequestMethod.POST)
-	public String updateProductPost(@ModelAttribute("product") Product product) {
+	public String updateProductPost(@ModelAttribute("product") @Valid Product product,
+		BindingResult bindingResult) {
+
+		// response in case of validation failure
+		if (bindingResult.hasErrors()) {
+			return "updateProduct";
+		}
 
 		Product currentProduct = productService.findById(product.getId());
 

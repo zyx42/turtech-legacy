@@ -40,16 +40,16 @@
 						<i class="fa fa-list"></i> Categories
 					</div>
 					<div class="list-group category_block">
-						<a class="list-group-item" th:classappend="${activeAll}? 'active'"
+						<a class="list-group-item" th:classappend="${activeAll} ? 'active'"
 							th:href="@{/products(category='all')}">All</a> <a
 							class="list-group-item"
-							th:classappend="${activeLaptops}? 'active'"
+							th:classappend="${activeLaptops} ? 'active'"
 							th:href="@{/searchByCategory(category='Laptops')}">Laptops</a> <a
 							class="list-group-item"
-							th:classappend="${activeCellphones}? 'active'"
+							th:classappend="${activeCellphones} ? 'active'"
 							th:href="@{/searchByCategory(category='Cellphones')}">Cellphones</a>
 						<a class="list-group-item"
-							th:classappend="${activeTablets}? 'active'"
+							th:classappend="${activeTablets} ? 'active'"
 							th:href="@{/searchByCategory(category='Tablets')}">Tablets</a>
 					</div>
 				</div>

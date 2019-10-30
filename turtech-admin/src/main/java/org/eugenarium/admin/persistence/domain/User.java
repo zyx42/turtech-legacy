@@ -14,6 +14,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -44,6 +50,8 @@ public class User implements UserDetails {
 	 * webstore's website.
 	 */
 	@Column(name = "username", nullable = false)
+	@Size(min = 2, max = 32, message = "{validation.user.username.Size}")
+	@NotBlank(message = "{validation.user.username.NotBlank}")
 	private String username;
 
 	/**
@@ -51,18 +59,22 @@ public class User implements UserDetails {
 	 * webstore's website.
 	 */
 	@Column(name = "password", nullable = false)
+	@Pattern(regexp = "^[a-zA-Z][a-zA-Z0-9]{8,31}", message = "{validation.user.password.Pattern}")
+	@NotBlank(message = "{validation.user.password.NotBlank}")
 	private String password;
 
 	/**
 	 * A first name of the user. This is optional information.
 	 */
 	@Column(name = "first_name")
+	@Size(max = 32, message = "{validation.user.firstName.Size}")
 	private String firstName;
 
 	/**
 	 * A last name of the user. This is optional information.
 	 */
 	@Column(name = "last_name")
+	@Size(max = 32, message = "{validation.user.lastName.Size}")
 	private String lastName;
 
 	/**
@@ -70,6 +82,8 @@ public class User implements UserDetails {
 	 * confirmations, restore password an all of the kind.
 	 */
 	@Column(name = "email", nullable = false)
+	@Email(message = "{validation.user.email.Email}")
+	@NotNull(message = "{validation.user.email.NotNull}")
 	private String email;
 
 	/**
@@ -126,6 +140,7 @@ public class User implements UserDetails {
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "role_id"))
 	@JsonIgnore
+	@NotEmpty(message = "{validation.user.roles.NotEmpty}")
 	private List<Role> roles = new ArrayList<>();
 
 	/**

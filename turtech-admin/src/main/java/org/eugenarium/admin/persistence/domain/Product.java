@@ -12,8 +12,15 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Size;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,12 +48,16 @@ public class Product implements Serializable {
 	 * model and a mark.
 	 */
 	@Column(name = "name")
+	@Size(min = 2, max = 32, message = "{validation.product.name.Size}")
+	@NotBlank(message = "{validation.product.name.NotBlank}")
 	private String name;
 
 	/**
 	 * A name of the manufacturer of the product.
 	 */
 	@Column(name = "manufacturer")
+	@Size(min = 2, max = 32, message = "{validation.product.manufacturer.Size}")
+	@NotBlank(message = "{validation.product.manufacturer.NotBlank}")
 	private String manufacturer;
 
 	/**
@@ -54,6 +65,8 @@ public class Product implements Serializable {
 	 */
 	@Column(name = "manufacture_date")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@NotNull(message = "{validation.product.manufactureDate.NotNull}")
+	@PastOrPresent(message = "{validation.product.manufactureDate.PastOrPresent}")
 	private LocalDate manufactureDate;
 
 	/**
@@ -61,6 +74,7 @@ public class Product implements Serializable {
 	 * cellphones or tablets.
 	 */
 	@Column(name = "category")
+	@NotNull(message = "{validation.product.category.NotNull}")
 	private String category;
 
 	/**
@@ -68,49 +82,63 @@ public class Product implements Serializable {
 	 * old, refurbished.
 	 */
 	@Column(name = "condition")
+	@NotNull(message = "{validation.product.condition.NotNull}")
 	private String condition;
 
 	/**
 	 * An approximate weight of the product during shipping.
 	 */
 	@Column(name = "shipping_weight")
+	@Min(value = 0, message = "{validation.product.shippingWeight.Min}")
+	@NotNull(message = "{validation.product.shippingWeight.NotNull}")
 	private double shippingWeight;
 
 	/**
 	 * A general price of the product, which is charged from a regular customer.
 	 */
 	@Column(name = "list_price")
-	private double listPrice;
+	@Min(value = 0, message = "{validation.product.listPrice.Min}")
+	@Digits(integer = 8, fraction = 2, message = "{validation.product.listPrice.Digits}")
+	@NotNull(message = "{validation.product.listPrice.NotNull}")
+	private BigDecimal listPrice;
 
 	/**
 	 * A special price of the product, which is charged under special circumstances,
 	 * like a sail, promo code or anything of sorts.
 	 */
 	@Column(name = "our_price")
-	private double ourPrice;
+	@Min(value = 0, message = "{validation.product.listPrice.Min}")
+	@Digits(integer = 8, fraction = 2, message = "{validation.product.listPrice.Digits}")
+	@NotNull(message = "{validation.product.listPrice.NotNull}")
+	private BigDecimal ourPrice;
 
 	/**
 	 * A general description of the product.
 	 */
 	@Column(name = "description", columnDefinition = "text")
+	@NotBlank(message = "{validation.product.description.NotBlank}")
 	private String description;
 
 	/**
 	 * A short summary of technical specifications of the product.
 	 */
 	@Column(name = "specifications", columnDefinition = "text")
+	@NotBlank(message = "{validation.product.specifications.NotBlank}")
 	private String specifications;
 
 	/**
 	 * A number of the product items left in stock.
 	 */
 	@Column(name = "in_stock_number")
+	@Min(value = 0, message = "{validation.product.inStockNumber.Min}")
+	@NotNull(message = "{validation.product.inStockNumber.NotNull}")
 	private int inStockNumber;
 
 	/**
 	 * A boolean which specifies if the product was discontinued or not.
 	 */
 	@Column(name = "discontinued")
+	@NotNull(message = "{validation.product.discontinued.NotNull}")
 	private boolean discontinued = false;
 
 	/**
