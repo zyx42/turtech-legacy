@@ -18,7 +18,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import java.time.LocalDateTime;
@@ -59,8 +58,6 @@ public class User implements UserDetails {
 	 * webstore's website.
 	 */
 	@Column(name = "password", nullable = false)
-	@Pattern(regexp = "^[a-zA-Z][a-zA-Z0-9]{8,31}", message = "{validation.user.password.Pattern}")
-	@NotBlank(message = "{validation.user.password.NotBlank}")
 	private String password;
 
 	/**

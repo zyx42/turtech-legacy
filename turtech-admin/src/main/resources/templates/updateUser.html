@@ -41,11 +41,11 @@
                         <!-- Username -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="username">* Username</label>
-                            <span th:if="${usernameExists}"
-                                  class="text-danger">Username already exists. Choose a different one.</span>
-                            <span th:if="${#fields.hasErrors('username')}"
-                                  class="text-danger"
-                                  th:errors="*{username}"></span>
+                            <p th:if="${usernameExists}"
+                               class="text-danger">Username already exists. Choose a different one.</p>
+                            <p th:if="${#fields.hasErrors('username')}"
+                               class="text-danger"
+                               th:errors="*{username}"></p>
                             <div class="col-md-8">
                                 <div class="input-group">
                                 <div class="input-group-prepend">
@@ -68,9 +68,9 @@
                         <!-- First name -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="firstName">First name</label>
-                            <span th:if="${#fields.hasErrors('firstName')}"
-                                  class="text-danger"
-                                  th:errors="*{firstName}"></span>
+                            <p th:if="${#fields.hasErrors('firstName')}"
+                               class="text-danger"
+                               th:errors="*{firstName}"></p>
                             <div class="col-md-8">
                                 <input type="text"
                                        th:field="*{firstName}"
@@ -86,9 +86,9 @@
                         <!-- Last name -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="lastName">Last name</label>
-                            <span th:if="${#fields.hasErrors('lastName')}"
-                                  class="text-danger"
-                                  th:errors="*{lastName}"></span>
+                            <p th:if="${#fields.hasErrors('lastName')}"
+                               class="text-danger"
+                               th:errors="*{lastName}"></p>
                             <div class="col-md-8">
                                 <input type="text"
                                        th:field="*{lastName}"
@@ -104,11 +104,11 @@
                         <!-- Email -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="email">* Email</label>
-                            <span class="text-danger"
-                                  th:if="${emailExists}">Email already exists. Choose a different one.</span>
-                            <span th:if="${#fields.hasErrors('email')}"
-                                  class="text-danger"
-                                  th:errors="*{email}"></span>
+                            <p class="text-danger"
+                               th:if="${emailExists}">Email already exists. Choose a different one.</p>
+                            <p th:if="${#fields.hasErrors('email')}"
+                               class="text-danger"
+                               th:errors="*{email}"></p>
                             <div class="col-md-8">
                                 <div class="input-group">
                                 <div class="input-group-prepend">
@@ -131,11 +131,10 @@
                         <!-- Password -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="password">* Password</label>
-                            <span class="text-danger"
-                                  th:if="${passwordIncorrect}">In order to change the password you have to provide a new one.</span>
-                            <span th:if="${#fields.hasErrors('password')}"
-                                  class="text-danger"
-                                  th:errors="*{password}"></span>
+                            <p class="text-danger"
+                               th:if="${incorrectPassword}">Password should start with a letter, followed by letters or numbers, 8 through 32 characters long.</p>
+                            <p class="text-danger"
+                               th:if="${samePassword}">In order to update the password, you should provide a different one, not the same one.</p>
                             <div class="col-md-8">
                                 <div class="input-group">
                                 <div class="input-group-prepend">
@@ -145,10 +144,10 @@
                                 </div>
                                 <input type="password"
                                        th:field="*{password}"
-                                       th:value="${user.password}"
                                        class="form-control"
                                        id="password"
-                                       th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'" />
+                                       placeholder="******"
+                                       th:classappend="${incorrectPassword} or ${samePassword} ? 'is-invalid'" />
                                 </div>
                                 <small class="text-muted">Password of the user. It should start with a letter which can be followed by alphanumeric or alphabet characters, 8 through 32 characters long</small>
                             </div>
@@ -195,9 +194,9 @@
                         <!-- Authorities -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="authorities">* Authorities</label>
-                            <span th:if="${#fields.hasErrors('roles')}"
-                                  class="text-danger"
-                                  th:errors="*{roles}"></span>
+                            <p th:if="${#fields.hasErrors('roles')}"
+                               class="text-danger"
+                               th:errors="*{roles}"></p>
                             <div class="col-md-8">
                                 <input id="authorities"
                                        type="checkbox"

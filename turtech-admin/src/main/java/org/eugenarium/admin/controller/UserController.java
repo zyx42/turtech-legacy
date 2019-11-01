@@ -7,7 +7,6 @@ import org.eugenarium.admin.persistence.service.RoleService;
 import org.eugenarium.admin.persistence.service.UserService;
 import org.eugenarium.admin.utility.SecurityUtility;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,6 +20,7 @@ import javax.websocket.server.PathParam;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Controller
 @RequestMapping("/user")
@@ -69,9 +69,26 @@ public class UserController {
 			return "addUser";
         }
         
-        // encrypting and salting the given password
-        String encryptedPassword = SecurityUtility.passwordEncoder().encode(user.getPassword());
-        user.setPassword(encryptedPassword);
+        // validating user password
+        // checking if password is empty or blank
+        if (user.getPassword() == null &&
+            user.getPassword().isEmpty() &&
+            user.getPassword().trim().length() <= 0) {
+
+            model.addAttribute("emptyPassword", true);
+
+            return "addUser";
+            // checking if the password follows the pattern: starts with a letter,
+            // followed by letters and numbers, 8 through 32 characters long
+        } else if (!Pattern.matches("^[a-zA-Z][a-zA-Z0-9]{8,31}", user.getPassword())) {
+            model.addAttribute("incorrectPassword", true);
+
+            return "addUser";
+        } else {
+            // encrypting and salting the fiven password
+            String encryptedPassword = SecurityUtility.passwordEncoder().encode(user.getPassword());
+            user.setPassword(encryptedPassword);
+        }
         
         // setting roles for the user
         List<Role> roles = new ArrayList<>();
@@ -142,18 +159,28 @@ public class UserController {
 			}
 		}
 
-        // updating password
-		if (user.getPassword() != null && !user.getPassword().isEmpty()) {
-			BCryptPasswordEncoder passwordEncoder = SecurityUtility.passwordEncoder();
-			String dbPassword = currentUser.getPassword();
-			if(!passwordEncoder.matches(user.getPassword(), dbPassword)){
-				currentUser.setPassword(passwordEncoder.encode(user.getPassword()));
-			} else {
-				model.addAttribute("incorrectPassword", true);
+        // validating user password
+        // checking if the field for updating password was left empty of blank
+        if (user.getPassword() != null &&
+            !user.getPassword().isEmpty() &&
+            user.getPassword().trim().length() > 0) {
 
-				return "updateUser";
-			}
-		}
+            // checking if the password follows the pattern: starts with a letter,
+            // followed by letters and numbers, 8 through 32 characters long
+            if (!Pattern.matches("^[a-zA-Z][a-zA-Z0-9]{8,31}", user.getPassword())) {
+                model.addAttribute("incorrectPassword", true);
+
+               return "updateUser";
+            } else if (SecurityUtility.passwordEncoder().matches(user.getPassword(), currentUser.getPassword())) {
+                model.addAttribute("samePassword", true);
+
+                return "updateUser";
+            } else {
+                // encrypting and salting the fiven password
+                String encryptedPassword = SecurityUtility.passwordEncoder().encode(user.getPassword());
+                currentUser.setPassword(encryptedPassword);
+            }
+        }
 
         // setting roles for the user
         List<Role> roles = new ArrayList<>();
