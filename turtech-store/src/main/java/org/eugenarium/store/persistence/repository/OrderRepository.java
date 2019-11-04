@@ -2,6 +2,7 @@ package org.eugenarium.store.persistence.repository;
 
 import org.eugenarium.store.persistence.domain.Order;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * Class {@code OrderRepository} is an interface for generic CRUD operations
@@ -14,5 +15,6 @@ import org.springframework.data.repository.CrudRepository;
  * 
  * @author Yevhenii Zhyliaiev
  */
+@Repository
 public interface OrderRepository extends CrudRepository<Order, Long> {
 }

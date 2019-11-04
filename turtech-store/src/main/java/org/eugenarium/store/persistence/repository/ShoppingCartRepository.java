@@ -2,6 +2,7 @@ package org.eugenarium.store.persistence.repository;
 
 import org.eugenarium.store.persistence.domain.ShoppingCart;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * Class {@code ShoppingCartRepository} is an interface for generic CRUD
@@ -15,5 +16,6 @@ import org.springframework.data.repository.CrudRepository;
  * 
  * @author Yevhenii Zhyliaiev
  */
+@Repository
 public interface ShoppingCartRepository extends CrudRepository<ShoppingCart, Long> {
 }

@@ -4,6 +4,7 @@ import org.eugenarium.store.persistence.domain.CartItem;
 import org.eugenarium.store.persistence.domain.Order;
 import org.eugenarium.store.persistence.domain.ShoppingCart;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ import java.util.List;
  * 
  * @author Yevhenii Zhyliaiev
  */
+@Repository
 public interface CartItemRepository extends CrudRepository<CartItem, Long> {
 
 	/**

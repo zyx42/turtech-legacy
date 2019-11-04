@@ -2,6 +2,7 @@ package org.eugenarium.store.persistence.repository;
 
 import org.eugenarium.store.persistence.domain.UserShipping;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * Class {@code UserShipppingRepository} is an interface for generic CRUD
@@ -15,5 +16,6 @@ import org.springframework.data.repository.CrudRepository;
  * 
  * @author Yevhenii Zhyliaiev
  */
+@Repository
 public interface UserShippingRepository extends CrudRepository<UserShipping, Long> {
 }

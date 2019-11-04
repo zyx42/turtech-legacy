@@ -2,6 +2,7 @@ package org.eugenarium.admin.persistence.repository;
 
 import org.eugenarium.admin.persistence.domain.security.Role;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * Class {@code RoleRepository} is an interface for generic CRUD operations
@@ -14,6 +15,7 @@ import org.springframework.data.repository.CrudRepository;
  * 
  * @author Yevhenii Zhyliaiev
  */
+@Repository
 public interface RoleRepository extends CrudRepository<Role, Long> {
 
 	/**

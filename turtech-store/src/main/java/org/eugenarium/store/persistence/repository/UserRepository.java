@@ -2,6 +2,7 @@ package org.eugenarium.store.persistence.repository;
 
 import org.eugenarium.store.persistence.domain.User;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * Class {@code UserRepository} is an interface for generic CRUD operations
@@ -14,6 +15,7 @@ import org.springframework.data.repository.CrudRepository;
  * 
  * @author Yevhenii Zhyliaiev
  */
+@Repository
 public interface UserRepository extends CrudRepository<User, Long> {
 
 	/**
