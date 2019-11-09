@@ -71,9 +71,9 @@ public class UserController {
         
         // validating user password
         // checking if password is empty or blank
-        if (user.getPassword() == null &&
-            user.getPassword().isEmpty() &&
-            user.getPassword().trim().length() <= 0) {
+        if (user.getPassword() == null ||
+            user.getPassword().isEmpty() ||
+            user.getPassword().trim().length() == 0) {
 
             model.addAttribute("emptyPassword", true);
 
@@ -171,6 +171,7 @@ public class UserController {
                 model.addAttribute("incorrectPassword", true);
 
                return "updateUser";
+            // checking if the new password is not the same as the current one
             } else if (SecurityUtility.passwordEncoder().matches(user.getPassword(), currentUser.getPassword())) {
                 model.addAttribute("samePassword", true);
 

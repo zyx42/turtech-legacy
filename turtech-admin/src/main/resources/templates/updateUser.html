@@ -77,7 +77,6 @@
                                        class="form-control"
                                        id="firstName"
                                        th:value="${user.firstName}"
-                                       placeholder="First name"
                                        th:classappend="${#fields.hasErrors('firstName')} ? 'is-invalid'" />
                                 <small class="text-muted">First name of the user</small>
                             </div>
@@ -95,7 +94,6 @@
                                        class="form-control"
                                        id="lastName"
                                        th:value="${user.lastName}"
-                                       placeholder="Last name"
                                        th:classappend="${#fields.hasErrors('lastName')} ? 'is-invalid'" />
                                 <small class="text-muted">Last name of the user</small>
                             </div>

@@ -15,9 +15,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,12 +25,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 @Controller
 public class AccountController {
@@ -198,7 +201,7 @@ public class AccountController {
 		return "myAccount";
 	}
 
-	@RequestMapping(value="/addNewCreditCard", method= RequestMethod.POST)
+	@PostMapping(value="/addNewCreditCard")
 	public String addNewCreditCard(@ModelAttribute("userPayment") UserPayment userPayment,
 			@ModelAttribute("userBilling") UserBilling userBilling,
 			Principal principal, Model model) {
@@ -217,7 +220,7 @@ public class AccountController {
 		return "myAccount";
 	}
 
-	@RequestMapping(value="/addNewShippingAddress", method= RequestMethod.POST)
+	@PostMapping(value="/addNewShippingAddress")
 	public String addNewShippingAddressPost(@ModelAttribute("userShipping") UserShipping userShipping,
 			Principal principal, Model model) {
 
@@ -289,7 +292,7 @@ public class AccountController {
 		}
 	}
 
-	@RequestMapping(value="/setDefaultPayment", method= RequestMethod.POST)
+	@PostMapping(value="/setDefaultPayment")
 	public String setDefaultPayment(@ModelAttribute("defaultUserPaymentId") Long defaultPaymentId,
 			Principal principal, Model model) {
 
@@ -377,7 +380,7 @@ public class AccountController {
 		}
 	}
 
-	@RequestMapping(value="/newUser", method = RequestMethod.POST)
+	@PostMapping(value="/newUser")
 	public String newUserPost(HttpServletRequest request,
 			@ModelAttribute("email") String userEmail,
 			@ModelAttribute("username") String username,
@@ -390,15 +393,17 @@ public class AccountController {
 		// response in case the username doesn't exist
 		if (userService.findByUsername(username) != null) {
 			model.addAttribute("usernameExists", true);
+			model.addAttribute("registerActive", "true");
 
-			return "forward:/#signup";
+			return "forward:/";
 		}
 
 		// response in case the email already exists
 		if (userService.findByEmail(userEmail) != null) {
 			model.addAttribute("emailExists", true);
+			model.addAttribute("registerActive", "true");
 
-			return "forward:/#signup";
+			return "forward:/";
 		}
 
 		User user = new User();
@@ -410,9 +415,29 @@ public class AccountController {
 		user.setCreatedDate(LocalDateTime.now());
 		user.setCreatedBy("oneself");
 
-		// encrypting and salting the given password
-		String encryptedPassword = SecurityUtility.passwordEncoder().encode(password);
-		user.setPassword(encryptedPassword);
+		// validating user password
+        // checking if password is empty or blank
+        if (password == null ||
+            password.isEmpty() ||
+            password.trim().length() == 0) {
+
+			model.addAttribute("emptyPassword", true);
+			model.addAttribute("registerActive", "true");
+
+			return "forward:/";
+
+            // checking if the password follows the pattern: starts with a letter,
+            // followed by letters and numbers, 8 through 32 characters long
+        } else if (!Pattern.matches("^[a-zA-Z][a-zA-Z0-9]{8,31}", password)) {
+			model.addAttribute("incorrectPassword", true);
+			model.addAttribute("registerActive", "true");
+
+            return "forward:/";
+        } else {
+            // encrypting and salting the fiven password
+            String encryptedPassword = SecurityUtility.passwordEncoder().encode(password);
+            user.setPassword(encryptedPassword);
+        }
 
 		// setting the role for the user
 		Role role = roleService.findByName("ROLE_USER");
@@ -436,7 +461,7 @@ public class AccountController {
 		SimpleMailMessage email = mailConstructor.constructResetTokenEmail(appUrl, request.getLocale(), token, user, password);
 		mailSender.send(email);
 
-		model.addAttribute("emailSent", "true");
+		model.addAttribute("emailSent", true);
 		model.addAttribute("orderList", user.getOrderList());
 
 		return "index";
@@ -471,9 +496,15 @@ public class AccountController {
 	}
 
 	@PostMapping(value = "/updateUserInfo")
-	public String updateUserInfo(@ModelAttribute("user") User user,
+	public String updateUserInfo(@ModelAttribute("user") @Valid User user,
 			@ModelAttribute("newPassword") String newPassword,
+			BindingResult bindingResult,
 			Model model) throws Exception {
+
+		// response in case of validation failure
+		if (bindingResult.hasErrors()) {
+			return "updateUser";
+		}
 
 		User currentUser = userService.findById(user.getId());
 
@@ -499,19 +530,36 @@ public class AccountController {
 			}
 		}
 
-		// updating password
-		if (newPassword != null && !newPassword.isEmpty()) {
-			BCryptPasswordEncoder passwordEncoder = SecurityUtility.passwordEncoder();
-			String dbPassword = currentUser.getPassword();
-			if(passwordEncoder.matches(user.getPassword(), dbPassword)){
-				currentUser.setPassword(passwordEncoder.encode(newPassword));
-			} else {
+		// validating user password
+        // checking if the field for updating password was left empty of blank
+        if (newPassword != null &&
+            !newPassword.isEmpty() &&
+            newPassword.trim().length() > 0) {
+
+            // checking if the password follows the pattern: starts with a letter,
+            // followed by letters and numbers, 8 through 32 characters long
+            if (!Pattern.matches("^[a-zA-Z][a-zA-Z0-9]{8,31}", user.getPassword())) {
+                model.addAttribute("incorrectPattern", true);
+
+			   return "updateUser";
+			// checking if new password is not the same as the current one
+            } else if (SecurityUtility.passwordEncoder().matches(newPassword, currentUser.getPassword())) {
+				model.addAttribute("samePassword", true);
+				model.addAttribute("classActiveProfile", true);
+
+				return "myAccount";
+			// checking if user can authorize himself with a valid password before applying changes
+			} else if (SecurityUtility.passwordEncoder().matches(user.getPassword(), currentUser.getPassword())) {
 				model.addAttribute("incorrectPassword", true);
 				model.addAttribute("classActiveProfile", true);
 
 				return "myAccount";
-			}
-		}
+            } else {
+                // encrypting and salting the fiven password
+                String encryptedPassword = SecurityUtility.passwordEncoder().encode(newPassword);
+                currentUser.setPassword(encryptedPassword);
+            }
+        }
 
 		// updating user data
 		currentUser.setFirstName(user.getFirstName());

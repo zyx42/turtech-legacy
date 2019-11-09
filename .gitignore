@@ -18,6 +18,8 @@ turtech-admin/target
 *.iws
 *.iml
 *.ipr
+**/turtech-admin.iml
+**/turtech-store.iml
 
 ### NetBeans ###
 /nbproject/private/

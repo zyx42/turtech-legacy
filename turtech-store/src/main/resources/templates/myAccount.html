@@ -60,8 +60,14 @@
 											   th:field="*{id}"
 											   th:value="${user.id}" />
 
+										<!-- Username -->
 										<div class="form-group row">
 											<label for="username" class="col-4 col-form-label">Username:</label>
+											<p th:if="${usernameExists}"
+                               				   class="text-danger">Username already exists. Choose a different one.</p>
+                            				<p th:if="${#fields.hasErrors('username')}"
+                               				   class="text-danger"
+                               				   th:errors="*{username}"></p>
 											<div class="col-8">
 											<div class="input-group">
 											<div class="input-group-prepend">
@@ -73,35 +79,55 @@
 													   class="form-control here"
 													   required="required"
 													   type="text"
-													   th:value="${user.username}">
+													   th:value="${user.username}"
+													   th:classappend="${#fields.hasErrors('username')} ? 'is-invalid'">
 													</div>
 											</div>
 										</div>
+
+										<!-- First Name -->
 										<div class="form-group row">
 											<label for="firstName" class="col-4 col-form-label">First
 												Name:</label>
+											<p th:if="${#fields.hasErrors('firstName')}"
+                               				   class="text-danger"
+                               				   th:errors="*{firstName}"></p>
 											<div class="col-8">
 												<input id="firstName"
 													   th:field="*{firstName}"
 													   class="form-control here"
 													   type="text"
-													   th:value="${user.firstName}">
+													   th:value="${user.firstName}"
+													   th:classappend="${#fields.hasErrors('firstName')} ? 'is-invalid'">
 											</div>
 										</div>
+
+										<!-- Last Name -->
 										<div class="form-group row">
 											<label for="lastName" class="col-4 col-form-label">Last
 												Name:</label>
+											<p th:if="${#fields.hasErrors('lastName')}"
+                               				   class="text-danger"
+                               				   th:errors="*{lastName}"></p>
 											<div class="col-8">
 												<input id="lastName"
 													   th:field="*{lastName}"
 													   class="form-control here"
 													   type="text"
-													   th:value="${user.lastName}">
+													   th:value="${user.lastName}"
+													   th:classappend="${#fields.hasErrors('lastName')} ? 'is-invalid'">
 											</div>
 										</div>
+
+										<!-- Email -->
 										<div class="form-group row">
 											<label for="email" class="col-4 col-form-label">Email
 												address:</label>
+											<p class="text-danger"
+                               				   th:if="${emailExists}">Email already exists. Choose a different one.</p>
+                            				<p th:if="${#fields.hasErrors('email')}"
+                               				   class="text-danger"
+                               				   th:errors="*{email}"></p
 											<div class="col-8">
 											<div class="input-group">
 											<div class="input-group-prepend">
@@ -113,7 +139,8 @@
 													   class="form-control here"
 													   required="required"
 													   type="email"
-													   th:value="${user.email}">
+													   th:value="${user.email}"
+													   th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'">
 											</div>
 													<small class="form-text text-muted">A valid email address. All
 													emails from the system will be sent to this address. The
@@ -122,6 +149,8 @@
 													certain notifications.</small>
 											</div>
 										</div>
+
+										<!-- Phone -->
 										<div class="form-group row">
 											<label for="phone" class="col-4 col-form-label">Phone
 												number:</label>
@@ -141,10 +170,16 @@
 													<small class="form-text text-muted">Pattern: (+380|0)XX-XXX-XX-XX</small>
 											</div>
 										</div>
+
+										<!-- New Password -->
 										<div id="checkPasswordEdit" style="display: none;" class="alert alert-danger">Passwords do not match!</div>
 										<div class="form-group row">
 											<label for="newPasswordEdit" class="col-4 col-form-label">New
 												Password:</label>
+											<p class="text-danger"
+                               				   th:if="${incorrectPattern}">Password should start with a letter, followed by letters or numbers, 8 through 32 characters long.</p>
+                            				<p class="text-danger"
+												  th:if="${samePassword}">In order to update the password, you should provide a different one, not the same one.</p>
 											<div class="col-8">
 											<div class="input-group">
 											<div class="input-group-prepend">
@@ -155,10 +190,13 @@
 													   name="newPassword"
 													   placeholder="New Password"
 													   class="form-control here"
-													   type="password">
+													   type="password"
+													   th:classappend="${incorrectPattern} or ${samePassword} ? 'is-invalid'">
 													</div>
 											</div>
 										</div>
+
+										<!-- Password Confirmation -->
 										<div class="form-group row">
 											<label for="confirmPasswordEdit" class="col-4 col-form-label">Confirm
 												New Password:</label>
@@ -175,9 +213,13 @@
 													</div>
 											</div>
 										</div>
+
+										<!-- Current Password to authorize -->
 										<div class="form-group row">
 											<label for="currentPassword" class="col-4 col-form-label">Current
 												Password:</label>
+											<p class="text-danger"
+                               				   th:if="${incorrectPassword}">In order to update the password, you should provide a different one, not the same one.</p>
 											<div class="col-8">
 											<div class="input-group">
 											<div class="input-group-prepend">
@@ -188,10 +230,11 @@
 													   th:field="*{password}"
 													   placeholder="Current Password"
 													   class="form-control"
-													   type="password">
+													   type="password"
+													   th:classappend="${incorrectPassword} ? 'is-invalid'">
 													</div>
 													<small class="form-text text-muted">Enter your current password to
-													change the email address or password.</small>
+													change password for the account.</small>
 											</div>
 										</div>
 										<div class="form-group row">

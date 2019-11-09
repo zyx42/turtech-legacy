@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/common :: common-header"></head>
+
+<body>
+
+<!-- Navigation -->
+<nav th:replace="fragments/common :: common-navbar"></nav>
+
+<!-- Page Content -->
+<div class="container">
+
+    <!-- Login Control -->
+    <div class="modal fade"
+         id="accountControl"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="loginModal"
+         aria-hidden="true">
+        <div class="modal-dialog"
+             role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title"
+                         id="login">
+                        <img class="img-responsive"
+                             th:src="@{/images/logo_bigger.png}"
+                             height="50"
+                             width="150" />
+                    </div>
+                    <button type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a id="signinTab"
+                           class="nav-link"
+                           href="#signin"
+                           data-toggle="tab"
+                           data-target="#signin">Sign In</a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="signupTab"
+                           class="nav-link"
+                           href="#signup"
+                           data-toggle="tab"
+                           data-target="#signup">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="forgotPasswordTab"
+                           class="nav-link"
+                           href="#forgotPassword"
+                           data-toggle="tab">Forgot Password?</a>
+                    </li>
+                </ul>
+
+                <div class="modal-body">
+                    <div class="tab-content">
+                        <!-- Login tabpanel -->
+                        <div role="tabpanel"
+                             class="tab-pane fade"
+                             id="signin">
+                            <h4 class="card-title mb-4 mt-1">Sign in</h4>
+                            <div class="alert alert-danger"
+                                 th:if="${param.error}">Invalid username and password.</div>
+                            <div class="alert alert-danger"
+                                 th:if="${param.logout}">You have been logged out.</div>
+                            <form th:action="@{/login}" method="post">
+                                <div class="form-group">
+                                    <label for="inputUsername">Your username:</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-user fa-fw"></i></span>
+                                        </div>
+                                        <input name="username"
+                                               id="inputUsername"
+                                               class="form-control"
+                                               placeholder="Username"
+                                               type="text"
+                                               required="required"
+                                               autofocus="autofocus">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputPassword">Your password:</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-lock fa-fw"></i></span>
+                                        </div>
+                                        <input name="password"
+                                               id="inputPassword"
+                                               class="form-control"
+                                               placeholder="******"
+                                               type="password"
+                                               required="required">
+                                    </div>
+                                </div>
+                                <div class="checkbox">
+                                    <label for="remember-me">
+                                        <input type="checkbox"
+                                               name="remember-me"
+                                               id="remember-me"
+                                               value="true">Remember password
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <input type="submit"
+                                           class="btn btn-primary btn-block"
+                                           name="login-submit"
+                                           id="login-submit"
+                                           value="Sign in" />
+                                </div>
+                            </form>
+                        </div>
+                        <!-- Register tabpanel -->
+                        <div role="tabpanel"
+                             class="tab-pane fade"
+                             id="signup">
+                            <h4 class="card-title mb-4 mt-1">Sign up</h4>
+                            <div class="alert alert-info"
+                                 th:if="${emailSent}">
+                                An email has been sent to the email address you just registered.
+                                Please validate your email address and update your password
+                                information.</div>
+                            <form th:action="@{/newUser}"
+                                  method="post">
+                                <div class="form-group">
+                                    <label for="registerUsername">* Username:</label>
+                                    <span class="text-danger"
+                                          th:if="${usernameExists}">Username
+                                        already exists. Choose a different one.</span>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-user fa-fw"></i></span>
+                                        </div>
+                                        <input name="username"
+                                               id="registerUsername"
+                                               class="form-control"
+                                               placeholder="Username"
+                                               type="text"
+                                               required="required"
+                                               autofocus="autofocus">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">* Email address:</label>
+                                    <span class="text-danger"
+                                          th:if="${emailExists}">Email already exists. Choose a different one.</span>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-envelope fa-fw"></i></span>
+                                        </div>
+                                        <input name="email"
+                                               id="email"
+                                               class="form-control"
+                                               placeholder="Email"
+                                               type="email"
+                                               required="required">
+                                    </div>
+                                    <small class="form-text text-muted">We'll never share
+                                        your email with anyone else. At least for free.</small>
+                                </div>
+                                <div class="form-group">
+                                    <div id="checkPasswordReg"
+                                         style="display: none;"
+                                         class="alert alert-danger">Passwords do not match!</div>
+                                    <label for="passwordReg">* Password:</label>
+                                    <span class="text-danger"
+                                          th:if="${emptyPassword}">Password cannot be left empty or consisting of whitespaces.</span>
+                                    <span class="text-danger"
+                                          th:if="${incorrectPassword}">Password should start with a letter, followed by letters or numbers, 8 through 32 characters long.</span>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-lock fa-fw"></i></span>
+                                        </div>
+                                        <input name="password"
+                                               id="passwordReg"
+                                               class="form-control"
+                                               placeholder="******"
+                                               type="password"
+                                               required="required"
+                                               th:classappend="${incorrectPassword} or ${emptyPassword} ? 'is-invalid'">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="confirmPasswordReg">* Confirm password:</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-lock fa-fw"></i></span>
+                                        </div>
+                                        <input id="confirmPasswordReg"
+                                               class="form-control"
+                                               placeholder="******"
+                                               type="password"
+                                               required="required">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col form-group">
+                                        <label>First name:</label>
+                                        <input name="firstName"
+                                               placeholder="First name"
+                                               type="text"
+                                               class="form-control">
+                                    </div>
+                                    <div class="col form-group">
+                                        <label>Last name:</label>
+                                        <input name="lastName"
+                                               placeholder="Last name"
+                                               type="text"
+                                               class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone">Phone Number:</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-phone fa-fw"></i></span>
+                                        </div>
+                                        <input name="phone"
+                                               id="phone"
+                                               class="form-control"
+                                               placeholder="+XX(XXX)XXX-XXXX"
+                                               type="tel"
+                                               pattern="/^+\d{1,2}(\d{3})\d{3}-\d{4}$/">
+                                    </div>
+                                    <small class="form-text text-muted">Pattern: +XX(XXX)XXX-XXXX</small>
+                                </div>
+                                <div class="form-group">
+                                    <input type="submit"
+                                           class="btn btn-primary btn-block"
+                                           name="login-submit"
+                                           id="register-submit"
+                                           value="Create new account" />
+                                </div>
+                                <small class="text-muted">By clicking the 'Create new account' button,
+                                    you confirm that you accept our Terms of use and Privacy Policy.
+                                </small>
+                            </form>
+                        </div>
+                        <!-- Forgot password tabpanel -->
+                        <div role="tabpanel"
+                             class="tab-pane fade"
+                             id="forgotPassword">
+                            <h4 class="card-title mb-4 mt-1">Forgot password?</h4>
+                            <div th:if="${emailNotExist}"
+                                 class="alert alert-danger">Email doesn't exist.</div>
+                            <div th:if="${forgotPasswordEmailSent}"
+                                 class="alert alert-success">Email with a recovery password is sent.</div>
+                            <form th:action="@{/forgotPassword}"
+                                  method="post">
+                                <div class="form-group">
+                                    <label for="recoverEmail">Your Email: </label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-envelope fa-fw"></i></span>
+                                        </div>
+                                        <input required="required"
+                                               type="email"
+                                               class="form-control"
+                                               id="recoverEmail"
+                                               autofocus="autofocus"
+                                               name="email"
+                                               placeholder="Your Email" />
+                                    </div>
+                                    <small class="form-text text-muted">Submit the email
+                                        with which you've registered.</small>
+                                </div>
+                                <div class="form-group">
+                                    <input type="submit"
+                                           class="btn btn-primary btn-block"
+                                           value="Submit" />
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- /.container -->
+
+<!-- Footer -->
+<footer th:replace="fragments/common :: common-footer"></footer>
+
+<div th:replace="fragments/common :: common-bottom"></div>
+</body>
+</html>
