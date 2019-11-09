@@ -45,7 +45,7 @@ public class ProductController {
 
 	@RequestMapping(value = "/addProduct", method = RequestMethod.POST)
 	public String addProductPost(@ModelAttribute("product") @Valid Product product,
-		BindingResult bindingResult) {
+								 BindingResult bindingResult) {
 
 		// response in case of validation failure
 		if (bindingResult.hasErrors()) {

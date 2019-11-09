@@ -1,30 +1,3 @@
-window.onload = function() {
-	var url = document.location.toString();
-	if (url.match('#signin') || url.match('#signup')) {
-		$('#accountControl').modal('show');
-		$(window.location.hash).tab('show');
-		$(window.location.hash + 'Tab').tab('show');
-	}
-};
-
-$('a[href="#signin"]').click(function() {
-	$('#accountControl').modal('show');
-	window.location.hash = 'signin';
-	$('#signinTab').tab('show');
-});
-
-$('a[href="#signup"]').click(function() {
-	$('#accountControl').modal('show');
-	window.location.hash = 'signup';
-	$('#signupTab').tab('show');
-});
-
-$('a[href="#forgetPassword"]').click(function() {
-	$('#accountControl').modal('show');
-	window.location.hash = 'forgetPassword';
-	$('forgetPasswordTab').tab('show');
-});
-
 $('a[href="#payment"]').click(function() {
 	$('.nav-link.active').removeClass('active');
 	$('#paymentNav').addClass('active');
@@ -37,18 +10,6 @@ $('a[href="#review"]').click(function() {
 	$('#reviewNav').addClass('active');
 	$('.tab-pane.active').removeClass('show active');
 	$('#review').addClass('show active');
-});
-
-function revertToOriginalURL() {
-	var original = window.location.href.substr(0, window.location.href
-			.indexOf('#'));
-	history.replaceState({}, document.title, original);
-}
-
-$('.modal').on('hidden.bs.modal', function() {
-	$('.tab-pane').removeClass('active');
-	$('.nav-tabs li a.active').removeClass('active');
-	revertToOriginalURL();
 });
 
 function checkBillingAddress() {

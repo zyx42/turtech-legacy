@@ -36,18 +36,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	// paths available for everyone
 	private static final String[] PUBLIC_MATCHERS = {
-		"/",
-		"/newUser",
-		"/sendMessage",
-		"/forgetPassword",
-		"/login",
-		"/products/**",
-		"/productDetails/**",
-		"/about",
-		"/faq",
-		"/contact",
-		"/searchByCategory",
-		"/searchProduct"
+			"/",
+			"/newUser",
+			"/newUserAction",
+			"/sendMessage",
+			"/forgetPassword",
+			"/login",
+			"/loginAction",
+			"/signIn",
+			"/signUp",
+			"/products/**",
+			"/productDetails/**",
+			"/about",
+			"/faq",
+			"/contact",
+			"/searchByCategory",
+			"/searchProduct"
 	};
 
 	@Override
@@ -60,14 +64,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 					.anyRequest().authenticated()
 			.and()
 				.csrf().disable().cors().disable()
-				.formLogin().failureUrl("/?error#signin")
+				.formLogin().failureUrl("/signIn?error")
 				.defaultSuccessUrl("/")
-				.loginProcessingUrl("/login")
-				.loginPage("/#signin")
+				.loginProcessingUrl("/loginAction")
+				.loginPage("/signIn")
 					.permitAll()
 			.and()
 				.logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-				.logoutSuccessUrl("/?logout#signin")
+				.logoutSuccessUrl("/signIn?logout")
 					.deleteCookies("remember-me")
 					.permitAll()
 			.and()
@@ -80,11 +84,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
     public void configure(WebSecurity web) throws Exception {
 
-        web.ignoring()
-            .antMatchers("/css/**")
-            .antMatchers("/images/**")
-            .antMatchers("/js/**")
-			.antMatchers("/webjars/**")
-			.antMatchers("/favicon.png");
+		web.ignoring()
+				.antMatchers("/css/**")
+				.antMatchers("/images/**")
+				.antMatchers("/js/**")
+				.antMatchers("/webjars/**")
+				.antMatchers("/favicon.png");
     	}
 }

@@ -18,11 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -31,7 +27,6 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -69,6 +64,136 @@ public class AccountController {
 		this.roleService = roleService;
 	}
 
+	@GetMapping("/signIn")
+	public String signIn(Model model) {
+		model.addAttribute("signInActive", true);
+		User user = new User();
+		model.addAttribute("user", user);
+
+		return "login";
+	}
+
+	@GetMapping("/signUp")
+	public String signUp(Model model) {
+		model.addAttribute("signUpActive", true);
+		User user = new User();
+		model.addAttribute("user", user);
+
+		return "login";
+	}
+
+	@PostMapping(value="/newUserAction")
+	public String newUserPost(HttpServletRequest request,
+							  @ModelAttribute("user") @Valid User user,
+							  BindingResult bindingResult,
+							  Model model) throws Exception {
+
+		if (bindingResult.hasErrors()) {
+			model.addAttribute("signUpActive", true);
+
+			return "login";
+		}
+
+		// response in case the username doesn't exist
+		if (userService.findByUsername(user.getUsername()) != null) {
+			model.addAttribute("usernameExists", true);
+			model.addAttribute("signUpActive", true);
+
+			return "login";
+		}
+
+		// response in case the email already exists
+		if (userService.findByEmail(user.getEmail()) != null) {
+			model.addAttribute("emailExists", true);
+			model.addAttribute("signUpActive", true);
+
+			return "login";
+		}
+
+		user.setCreatedDate(LocalDateTime.now());
+		user.setCreatedBy("oneself");
+
+		// validating user password
+		// checking if password is empty or blank
+		if (user.getPassword() == null ||
+				user.getPassword().isEmpty() ||
+				user.getPassword().trim().length() == 0) {
+
+			model.addAttribute("emptyPassword", true);
+			model.addAttribute("signUpActive", true);
+
+			return "login";
+
+			// checking if the password follows the pattern: starts with a letter,
+			// followed by letters and numbers, 8 through 32 characters long
+		} else if (!Pattern.matches("^[a-zA-Z][a-zA-Z0-9]{8,31}", user.getPassword())) {
+			model.addAttribute("incorrectPassword", true);
+			model.addAttribute("signUpActive", true);
+
+			return "login";
+		} else {
+			// encrypting and salting the fiven password
+			String encryptedPassword = SecurityUtility.passwordEncoder().encode(user.getPassword());
+			user.setPassword(encryptedPassword);
+		}
+
+		// setting the role for the user
+		Role role = roleService.findByName("ROLE_USER");
+		List<Role> roles = new ArrayList<>();
+		roles.add(role);
+		user.setRoles(roles);
+
+		// providing a user with a personal shopping cart
+		ShoppingCart shoppingCart = new ShoppingCart();
+		shoppingCart.setUser(user);
+		user.setShoppingCart(shoppingCart);
+
+		userService.createUser(user);
+
+		String token = UUID.randomUUID().toString();
+		userService.createPasswordResetTokenForUser(user, token);
+
+		String appUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+
+		// sending an email to a new user
+		SimpleMailMessage email = mailConstructor.constructResetTokenEmail
+				(appUrl, request.getLocale(), token, user, user.getPassword());
+		mailSender.send(email);
+
+		model.addAttribute("emailSent", true);
+		model.addAttribute("orderList", user.getOrderList());
+
+		return "login";
+	}
+
+
+	@RequestMapping("/newUser")
+	public String newUser(@RequestParam("token") String token, Model model) {
+
+		PasswordResetToken passToken = userService.getPasswordResetToken(token);
+
+		if (passToken == null) {
+			String message = "Invalid Token.";
+			model.addAttribute("message", message);
+			return "redirect:/400";
+		}
+
+		User user = passToken.getUser();
+		String username = user.getUsername();
+
+		UserDetails userDetails = userSecurityService.loadUserByUsername(username);
+
+		Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
+
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+
+		model.addAttribute("user", user);
+
+		model.addAttribute("classActiveProfile", true);
+
+		return "myAccount";
+	}
+
 	@RequestMapping("/forgotPassword")
 	public String forgotPassword(@ModelAttribute("email") String email,
 			HttpServletRequest request,
@@ -81,7 +206,7 @@ public class AccountController {
 		// response in case of provided email does not exist in the database
 		if (user == null) {
 			model.addAttribute("emailNotExist", true);
-			return "/#login";
+			return "login";
 		}
 
 		// generating new recovery password for the user
@@ -100,9 +225,9 @@ public class AccountController {
 		SimpleMailMessage newEmail = mailConstructor.constructResetTokenEmail(appUrl, request.getLocale(), token, user, password);
 		mailSender.send(newEmail);
 
-		model.addAttribute("forgotPasswordEmailSent", "true");
+		model.addAttribute("forgotPasswordEmailSent", true);
 
-		return "/#login";
+		return "login";
 	}
 
 	@RequestMapping("/myAccount")
@@ -121,6 +246,100 @@ public class AccountController {
 		model.addAttribute("listOfShippingAddresses", true);
 
 		model.addAttribute("classActiveProfile", true);
+
+		return "myAccount";
+	}
+
+	@PostMapping(value = "/updateUserInfo")
+	public String updateUserInfo(@ModelAttribute("user") @Valid User user,
+								 @ModelAttribute("newPassword") String newPassword,
+								 BindingResult bindingResult,
+								 Model model) throws Exception {
+
+		// response in case of validation failure
+		if (bindingResult.hasErrors()) {
+			return "updateUser";
+		}
+
+		User currentUser = userService.findById(user.getId());
+
+		if (currentUser == null) {
+			throw new Exception ("User not found");
+		}
+
+		// check if username already exists
+		if (userService.findByUsername(user.getUsername())!=null) {
+			if (!userService.findByUsername(user.getUsername()).getId().equals(currentUser.getId())) {
+				model.addAttribute("usernameExists", true);
+				model.addAttribute("classActiveProfile", true);
+				return "myAccount";
+			}
+		}
+
+		// check if email already exists
+		if (userService.findByEmail(user.getEmail())!=null) {
+			if(!userService.findByEmail(user.getEmail()).getId().equals(currentUser.getId())) {
+				model.addAttribute("emailExists", true);
+				model.addAttribute("classActiveProfile", true);
+				return "myAccount";
+			}
+		}
+
+		// validating user password
+		// checking if the field for updating password was left empty of blank
+		if (newPassword != null &&
+				!newPassword.isEmpty() &&
+				newPassword.trim().length() > 0) {
+
+			// checking if the password follows the pattern: starts with a letter,
+			// followed by letters and numbers, 8 through 32 characters long
+			if (!Pattern.matches("^[a-zA-Z][a-zA-Z0-9]{8,31}", user.getPassword())) {
+				model.addAttribute("incorrectPattern", true);
+
+				return "updateUser";
+				// checking if new password is not the same as the current one
+			} else if (SecurityUtility.passwordEncoder().matches(newPassword, currentUser.getPassword())) {
+				model.addAttribute("samePassword", true);
+				model.addAttribute("classActiveProfile", true);
+
+				return "myAccount";
+				// checking if user can authorize himself with a valid password before applying changes
+			} else if (SecurityUtility.passwordEncoder().matches(user.getPassword(), currentUser.getPassword())) {
+				model.addAttribute("incorrectPassword", true);
+				model.addAttribute("classActiveProfile", true);
+
+				return "myAccount";
+			} else {
+				// encrypting and salting the fiven password
+				String encryptedPassword = SecurityUtility.passwordEncoder().encode(newPassword);
+				currentUser.setPassword(encryptedPassword);
+			}
+		}
+
+		// updating user data
+		currentUser.setFirstName(user.getFirstName());
+		currentUser.setLastName(user.getLastName());
+		currentUser.setUsername(user.getUsername());
+		currentUser.setEmail(user.getEmail());
+		currentUser.setPhone(user.getPhone());
+		currentUser.setLastModifiedDate(LocalDateTime.now());
+		currentUser.setLastModifiedBy("oneself");
+
+		userService.save(currentUser);
+
+		model.addAttribute("updateSuccess", true);
+		model.addAttribute("user", currentUser);
+		model.addAttribute("classActiveProfile", true);
+
+		model.addAttribute("listOfShippingAddresses", true);
+		model.addAttribute("listOfCreditCards", true);
+
+		UserDetails userDetails = userSecurityService.loadUserByUsername(currentUser.getUsername());
+
+		Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
+
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		model.addAttribute("orderList", user.getOrderList());
 
 		return "myAccount";
 	}
@@ -378,215 +597,6 @@ public class AccountController {
 
 			return "myAccount";
 		}
-	}
-
-	@PostMapping(value="/newUser")
-	public String newUserPost(HttpServletRequest request,
-			@ModelAttribute("email") String userEmail,
-			@ModelAttribute("username") String username,
-			@ModelAttribute("password") String password,
-			@ModelAttribute("firstName") String firstName,
-			@ModelAttribute("lastName") String lastName,
-			@ModelAttribute("phone") String phone,
-			Model model) throws Exception {
-
-		// response in case the username doesn't exist
-		if (userService.findByUsername(username) != null) {
-			model.addAttribute("usernameExists", true);
-			model.addAttribute("registerActive", "true");
-
-			return "forward:/";
-		}
-
-		// response in case the email already exists
-		if (userService.findByEmail(userEmail) != null) {
-			model.addAttribute("emailExists", true);
-			model.addAttribute("registerActive", "true");
-
-			return "forward:/";
-		}
-
-		User user = new User();
-		user.setUsername(username);
-		user.setEmail(userEmail);
-		user.setFirstName(firstName);
-		user.setLastName(lastName);
-		user.setPhone(phone);
-		user.setCreatedDate(LocalDateTime.now());
-		user.setCreatedBy("oneself");
-
-		// validating user password
-        // checking if password is empty or blank
-        if (password == null ||
-            password.isEmpty() ||
-            password.trim().length() == 0) {
-
-			model.addAttribute("emptyPassword", true);
-			model.addAttribute("registerActive", "true");
-
-			return "forward:/";
-
-            // checking if the password follows the pattern: starts with a letter,
-            // followed by letters and numbers, 8 through 32 characters long
-        } else if (!Pattern.matches("^[a-zA-Z][a-zA-Z0-9]{8,31}", password)) {
-			model.addAttribute("incorrectPassword", true);
-			model.addAttribute("registerActive", "true");
-
-            return "forward:/";
-        } else {
-            // encrypting and salting the fiven password
-            String encryptedPassword = SecurityUtility.passwordEncoder().encode(password);
-            user.setPassword(encryptedPassword);
-        }
-
-		// setting the role for the user
-		Role role = roleService.findByName("ROLE_USER");
-		List<Role> roles = new ArrayList<>();
-		roles.add(role);
-		user.setRoles(roles);
-		
-		// providing a user with a personal shopping cart
-		ShoppingCart shoppingCart = new ShoppingCart();
-		shoppingCart.setUser(user);
-		user.setShoppingCart(shoppingCart);
-		
-		userService.createUser(user);
-
-		String token = UUID.randomUUID().toString();
-		userService.createPasswordResetTokenForUser(user, token);
-
-		String appUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
-
-		// sending an email to a new user
-		SimpleMailMessage email = mailConstructor.constructResetTokenEmail(appUrl, request.getLocale(), token, user, password);
-		mailSender.send(email);
-
-		model.addAttribute("emailSent", true);
-		model.addAttribute("orderList", user.getOrderList());
-
-		return "index";
-	}
-
-
-	@RequestMapping("/newUser")
-	public String newUser(Locale locale, @RequestParam("token") String token, Model model) {
-
-		PasswordResetToken passToken = userService.getPasswordResetToken(token);
-
-		if (passToken == null) {
-			String message = "Invalid Token.";
-			model.addAttribute("message", message);
-			return "redirect:/400";
-		}
-
-		User user = passToken.getUser();
-		String username = user.getUsername();
-
-		UserDetails userDetails = userSecurityService.loadUserByUsername(username);
-
-		Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
-
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-
-		model.addAttribute("user", user);
-
-		model.addAttribute("classActiveProfile", true);
-
-		return "myAccount";
-	}
-
-	@PostMapping(value = "/updateUserInfo")
-	public String updateUserInfo(@ModelAttribute("user") @Valid User user,
-			@ModelAttribute("newPassword") String newPassword,
-			BindingResult bindingResult,
-			Model model) throws Exception {
-
-		// response in case of validation failure
-		if (bindingResult.hasErrors()) {
-			return "updateUser";
-		}
-
-		User currentUser = userService.findById(user.getId());
-
-		if (currentUser == null) {
-			throw new Exception ("User not found");
-		}
-
-		// check if username already exists
-		if (userService.findByUsername(user.getUsername())!=null) {
-			if (!userService.findByUsername(user.getUsername()).getId().equals(currentUser.getId())) {
-				model.addAttribute("usernameExists", true);
-				model.addAttribute("classActiveProfile", true);
-				return "myAccount";
-			}
-		}
-
-		// check if email already exists
-		if (userService.findByEmail(user.getEmail())!=null) {
-			if(!userService.findByEmail(user.getEmail()).getId().equals(currentUser.getId())) {
-				model.addAttribute("emailExists", true);
-				model.addAttribute("classActiveProfile", true);
-				return "myAccount";
-			}
-		}
-
-		// validating user password
-        // checking if the field for updating password was left empty of blank
-        if (newPassword != null &&
-            !newPassword.isEmpty() &&
-            newPassword.trim().length() > 0) {
-
-            // checking if the password follows the pattern: starts with a letter,
-            // followed by letters and numbers, 8 through 32 characters long
-            if (!Pattern.matches("^[a-zA-Z][a-zA-Z0-9]{8,31}", user.getPassword())) {
-                model.addAttribute("incorrectPattern", true);
-
-			   return "updateUser";
-			// checking if new password is not the same as the current one
-            } else if (SecurityUtility.passwordEncoder().matches(newPassword, currentUser.getPassword())) {
-				model.addAttribute("samePassword", true);
-				model.addAttribute("classActiveProfile", true);
-
-				return "myAccount";
-			// checking if user can authorize himself with a valid password before applying changes
-			} else if (SecurityUtility.passwordEncoder().matches(user.getPassword(), currentUser.getPassword())) {
-				model.addAttribute("incorrectPassword", true);
-				model.addAttribute("classActiveProfile", true);
-
-				return "myAccount";
-            } else {
-                // encrypting and salting the fiven password
-                String encryptedPassword = SecurityUtility.passwordEncoder().encode(newPassword);
-                currentUser.setPassword(encryptedPassword);
-            }
-        }
-
-		// updating user data
-		currentUser.setFirstName(user.getFirstName());
-		currentUser.setLastName(user.getLastName());
-		currentUser.setUsername(user.getUsername());
-		currentUser.setEmail(user.getEmail());
-		currentUser.setPhone(user.getPhone());
-		currentUser.setLastModifiedDate(LocalDateTime.now());
-		currentUser.setLastModifiedBy("oneself");
-
-		userService.save(currentUser);
-
-		model.addAttribute("updateSuccess", true);
-		model.addAttribute("user", currentUser);
-		model.addAttribute("classActiveProfile", true);
-
-		model.addAttribute("listOfShippingAddresses", true);
-		model.addAttribute("listOfCreditCards", true);
-
-		UserDetails userDetails = userSecurityService.loadUserByUsername(currentUser.getUsername());
-
-		Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
-
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-		model.addAttribute("orderList", user.getOrderList());
-
-		return "myAccount";
 	}
 
 	@RequestMapping("/orderDetail")

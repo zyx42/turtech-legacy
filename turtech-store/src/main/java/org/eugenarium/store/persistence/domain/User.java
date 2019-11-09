@@ -130,7 +130,6 @@ public class User implements UserDetails {
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "role_id"))
 	@JsonIgnore
-	@NotEmpty(message = "{validation.user.roles.NotEmpty}")
 	private List<Role> roles = new ArrayList<>();
 
 		/**
