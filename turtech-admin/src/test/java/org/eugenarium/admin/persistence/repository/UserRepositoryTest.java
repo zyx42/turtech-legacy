@@ -34,7 +34,7 @@ public class UserRepositoryTest {
         User user = new User();
         user.setUsername("John");
         user.setEmail("j@gmail.com");
-        List<Role> roles = new ArrayList<Role>();
+        List<Role> roles = new ArrayList<>();
         Role role = new Role();
         role.setName("ROLE_USER");
         roleRepository.save(role);
@@ -44,5 +44,22 @@ public class UserRepositoryTest {
 
         User found = userRepository.findByUsername("John");
         assertThat(found.getUsername()).isEqualTo(user.getUsername());
+    }
+
+    @Test
+    public void whenFindByEmail_thenReturnUser() {
+        User user = new User();
+        user.setUsername("John");
+        user.setEmail("j@gmail.com");
+        List<Role> roles = new ArrayList<>();
+        Role role = new Role();
+        role.setName("ROLE_USER");
+        roleRepository.save(role);
+        roles.add(role);
+        user.setRoles(roles);
+        entityManager.persistAndFlush(user);
+
+        User found = userRepository.findByEmail("j@gmail.com");
+        assertThat(found.getEmail()).isEqualTo(user.getEmail());
     }
 }

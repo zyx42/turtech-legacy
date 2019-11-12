@@ -57,7 +57,7 @@ public interface UserService {
 	/**
 	 * Retrieves a {@code User} entity by its {@code id} field.
 	 * 
-	 * @param {@code id} must not be {@literal null}.
+	 * @param id must not be {@literal null}.
 	 * @return the {@code User} entity with the given {@code id} or
 	 *         {@literal Optional#empty()} if none found
 	 */
@@ -66,7 +66,7 @@ public interface UserService {
 	/**
     * Find a {@code User} entity by its {@code id} field and deletes it from the database.
     * 
-    * @param {@code id} must not be {@literal null}.
+    * @param user - the user to delete.
     */
 	void delete(User user);
 }
