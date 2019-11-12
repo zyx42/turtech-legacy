@@ -124,10 +124,10 @@
 											<label for="email" class="col-4 col-form-label">Email
 												address:</label>
 											<p class="text-danger"
-                               				   th:if="${emailExists}">Email already exists. Choose a different one.</p>
-                            				<p th:if="${#fields.hasErrors('email')}"
-                               				   class="text-danger"
-                               				   th:errors="*{email}"></p
+											   th:if="${emailExists}">Email already exists. Choose a different one.</p>
+											<p th:if="${#fields.hasErrors('email')}"
+											   class="text-danger"
+											   th:errors="*{email}"></p>
 											<div class="col-8">
 											<div class="input-group">
 											<div class="input-group-prepend">
@@ -219,7 +219,8 @@
 											<label for="currentPassword" class="col-4 col-form-label">Current
 												Password:</label>
 											<p class="text-danger"
-                               				   th:if="${incorrectPassword}">In order to update the password, you should provide a different one, not the same one.</p>
+											   th:if="${incorrectPassword}">In order to update the password,
+												you should provide a different one, not the same one.</p>
 											<div class="col-8">
 											<div class="input-group">
 											<div class="input-group-prepend">
@@ -468,9 +469,13 @@
 
 											<div class="form-group">
 												<h5>* Give a name for your card:</h5>
-												<input type="text" class="form-control" id="cardName"
-													placeholder="Card Name" th:name="cardName"
-													required="required" th:value="${userPayment.cardName}" />
+												<input type="text"
+													   class="form-control"
+													   id="cardName"
+													   placeholder="Card Name"
+													   th:name="cardName"
+													   required="required"
+													   th:value="${userPayment.cardName}" />
 											</div>
 
 											<!-- Billing Address -->
@@ -479,21 +484,30 @@
 												<h4>Billing Address</h4>
 											</div>
 											<div class="form-group">
-												<label for="billingName">* Name</label> <input type="text"
-													class="form-control" id="billingName"
-													placeholder="Receiver Name" th:name="userBillingName"
-													required="required"
-													th:value="${userBilling.userBillingName}" />
+												<label for="billingName">* Name</label>
+												<input type="text"
+													   class="form-control"
+													   id="billingName"
+													   placeholder="Receiver Name"
+													   th:name="userBillingName"
+													   required="required"
+													   th:value="${userBilling.userBillingName}" />
 											</div>
 											<div class="form-group">
-												<label for="billingAddress">* Street Address</label> <input
-													type="text" class="form-control" id="billingAddress"
-													placeholder="Street Address 1" th:name="userBillingStreet1"
-													required="required"
-													th:value="${userBilling.userBillingStreet1}" /> <input
-													type="text" class="form-control mt-2" id="billingAddress"
-													placeholder="Street Address 2" th:name="userBillingStreet2"
-													th:value="${userBilling.userBillingStreet2}" />
+												<label for="billingAddress1">* Street Address</label>
+												<input type="text"
+													   class="form-control"
+													   id="billingAddress1"
+													   placeholder="Street Address 1"
+													   th:name="userBillingStreet1"
+													   required="required"
+													th:value="${userBilling.userBillingStreet1}" />
+												<input type="text"
+													   class="form-control mt-2"
+													   id="billingAddress2"
+													   placeholder="Street Address 2"
+													   th:name="userBillingStreet2"
+													   th:value="${userBilling.userBillingStreet2}" />
 											</div>
 
 											<div class="row">
@@ -572,11 +586,15 @@
 											<div class="row">
 												<div class="col-sm-8">
 													<div class="form-group">
-														<label><span class="hidden-xs">Expiration</span> </label>
+														<label>
+															<span class="hidden-xs">Expiration</span>
+														</label>
 														<div class="form-inline">
-															<select class="form-control" name="expiryMonth"
-																required="required"
-																th:value="${userPayment.expiryMonth}" style="width: 45%">
+															<select class="form-control"
+																	name="expiryMonth"
+																	required="required"
+																	th:value="${userPayment.expiryMonth}"
+																	style="width: 45%">
 																<option disabled="disabled">-- Month --</option>
 																<option value="01">Jan (01)</option>
 																<option value="02">Feb (02)</option>
@@ -684,8 +702,9 @@
 
 							<div th:if="${addNewShippingAddress}">
 								<form th:action="@{/addNewShippingAddress}" method="post">
-									<div class="bg-info" th:if="${updateUserShippingInfo}">User
-										info updated.</div>
+									<div class="bg-info"
+										 th:if="${updateUserShippingInfo}">
+										User info updated.</div>
 
 									<input hidden="hidden" name="id" th:value="${userShipping.id}" />
 

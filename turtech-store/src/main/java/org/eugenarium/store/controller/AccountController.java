@@ -132,7 +132,7 @@ public class AccountController {
 
 			return "login";
 		} else {
-			// encrypting and salting the fiven password
+			// encrypting and salting the given password
 			String encryptedPassword = SecurityUtility.passwordEncoder().encode(user.getPassword());
 			user.setPassword(encryptedPassword);
 		}
@@ -199,13 +199,14 @@ public class AccountController {
 			HttpServletRequest request,
 			Model model) {
 
-		model.addAttribute("classActiveForgotPassword", true);
+		model.addAttribute("forgotPasswordActive", true);
 
 		User user = userService.findByEmail(email);
 
 		// response in case of provided email does not exist in the database
 		if (user == null) {
 			model.addAttribute("emailNotExist", true);
+			model.addAttribute("forgotPasswordActive", true);
 			return "login";
 		}
 
@@ -258,7 +259,8 @@ public class AccountController {
 
 		// response in case of validation failure
 		if (bindingResult.hasErrors()) {
-			return "updateUser";
+			model.addAttribute("classActiveProfile", true);
+			return "myAccount";
 		}
 
 		User currentUser = userService.findById(user.getId());
@@ -295,8 +297,9 @@ public class AccountController {
 			// followed by letters and numbers, 8 through 32 characters long
 			if (!Pattern.matches("^[a-zA-Z][a-zA-Z0-9]{8,31}", user.getPassword())) {
 				model.addAttribute("incorrectPattern", true);
+				model.addAttribute("classActiveProfile", true);
 
-				return "updateUser";
+				return "myAccount";
 				// checking if new password is not the same as the current one
 			} else if (SecurityUtility.passwordEncoder().matches(newPassword, currentUser.getPassword())) {
 				model.addAttribute("samePassword", true);
@@ -310,7 +313,7 @@ public class AccountController {
 
 				return "myAccount";
 			} else {
-				// encrypting and salting the fiven password
+				// encrypting and salting the given password
 				String encryptedPassword = SecurityUtility.passwordEncoder().encode(newPassword);
 				currentUser.setPassword(encryptedPassword);
 			}
@@ -466,7 +469,7 @@ public class AccountController {
 		UserPayment userPayment = userPaymentService.findById(creditCardId);
 
 		if(!user.getId().equals(userPayment.getUser().getId())) {
-			return "badRequestPage";
+			return "400";
 		} else {
 			model.addAttribute("user", user);
 			UserBilling userBilling = userPayment.getUserBilling();
@@ -493,7 +496,7 @@ public class AccountController {
 		UserShipping userShipping = userShippingService.findById(shippingAddressId);
 
 		if(!user.getId().equals(userShipping.getUser().getId())) {
-			return "badRequestPage";
+			return "400";
 		} else {
 			model.addAttribute("user", user);
 
@@ -582,7 +585,7 @@ public class AccountController {
 		UserShipping userShipping = userShippingService.findById(userShippingId);
 
 		if(!user.getId().equals(userShipping.getUser().getId())) {
-			return "badRequestPage";
+			return "400";
 		} else {
 			model.addAttribute("user", user);
 

@@ -36,14 +36,14 @@
                         </h4>
                         <input type="hidden"
                                th:field="*{id}"
-                               th:value="${product.id}"></input>
+                               th:value="${product.id}" />
 
                         <!-- Name -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="name">* Name</label>
-                            <span th:if="${#fields.hasErrors('name')}"
+                            <p th:if="${#fields.hasErrors('name')}"
                                   class="text-danger"
-                                  th:errors="*{name}"></span>
+                                  th:errors="*{name}"></p>
                             <div class="col-md-8">
                                 <div class="input-group">
                                 <div class="input-group-prepend">
@@ -67,9 +67,9 @@
                         <!-- Manufacturer -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="manufacturer">* Manufacturer</label>
-                            <span th:if="${#fields.hasErrors('manufacturer')}"
+                            <p th:if="${#fields.hasErrors('manufacturer')}"
                                   class="text-danger"
-                                  th:errors="*{manufacturer}"></span>
+                                  th:errors="*{manufacturer}"></p>
                             <div class="col-md-8">
                                 <div class="input-group">
                                 <div class="input-group-prepend">
@@ -93,9 +93,9 @@
                         <!-- Manufacture date -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="manufactureDate">Manufacture date</label>
-                            <span th:if="${#fields.hasErrors('manufactureDate')}"
+                            <p th:if="${#fields.hasErrors('manufactureDate')}"
                                   class="text-danger"
-                                  th:errors="*{manufactureDate}"></span>
+                                  th:errors="*{manufactureDate}"></p>
                             <div class="col-md-8">
                                 <div class="input-group">
                                 <div class="input-group-prepend">
@@ -119,9 +119,9 @@
                         <!-- Category -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="category">* Category</label>
-                            <span th:if="${#fields.hasErrors('category')}"
+                            <p th:if="${#fields.hasErrors('category')}"
                                   class="text-danger"
-                                  th:errors="*{category}"></span>
+                                  th:errors="*{category}"></p>
                             <div class="col-md-8">
                                 <select th:value="${product.category}"
                                         id="category"
@@ -145,9 +145,9 @@
                         <!-- Condition -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="condition">* Condition</label>
-                            <span th:if="${#fields.hasErrors('condition')}"
+                            <p th:if="${#fields.hasErrors('condition')}"
                                   class="text-danger"
-                                  th:errors="*{condition}"></span>
+                                  th:errors="*{condition}"></p>
                             <div class="col-md-8">
                                 <select th:value="${product.condition}"
                                         id="condition"
@@ -171,9 +171,9 @@
                         <!-- Shipping weight -->
                         <div class="form-group">
                             <label class="col-md-4 control-label" for="shippingWeight">* Shipping weight(kg)</label>
-                            <span th:if="${#fields.hasErrors('shippingWeight')}"
+                            <p th:if="${#fields.hasErrors('shippingWeight')}"
                                   class="text-danger"
-                                  th:errors="*{shippingWeight}"></span>
+                                  th:errors="*{shippingWeight}"></p>
                             <div class="col-md-8">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
@@ -198,9 +198,9 @@
                         <!-- List price -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="listPrice">* List price</label>
-                            <span th:if="${#fields.hasErrors('listPrice')}"
+                            <p th:if="${#fields.hasErrors('listPrice')}"
                                   class="text-danger"
-                                  th:errors="*{listPrice}"></span>
+                                  th:errors="*{listPrice}"></p>
                             <div class="col-md-8">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
@@ -225,9 +225,9 @@
                         <!-- Our price -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="ourPrice">* Our price</label>
-                            <span th:if="${#fields.hasErrors('ourPrice')}"
+                            <p th:if="${#fields.hasErrors('ourPrice')}"
                                   class="text-danger"
-                                  th:errors="*{ourPrice}"></span>
+                                  th:errors="*{ourPrice}"></p>
                             <div class="col-md-8">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
@@ -252,9 +252,9 @@
                         <!-- In-stock number -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="inStockNumber">* Number in stock</label>
-                            <span th:if="${#fields.hasErrors('inStockNumber')}"
+                            <p th:if="${#fields.hasErrors('inStockNumber')}"
                                   class="text-danger"
-                                  th:errors="*{inStockNumber}"></span>
+                                  th:errors="*{inStockNumber}"></p>
                             <div class="col-md-8">
                                 <div class="input-group">
                                 <div class="input-group-prepend">
@@ -277,10 +277,10 @@
 
                         <!-- Discontinued -->
                         <div class="form-group">
-                            <label class="col-md-2 control-label" for="discontinued">Discontinued</label>
-                            <span th:if="${#fields.hasErrors('discontinued')}"
+                            <label class="col-md-2 control-label">Discontinued</label>
+                            <p th:if="${#fields.hasErrors('discontinued')}"
                                   class="text-danger"
-                                  th:errors="*{discontinued}"></span>
+                                  th:errors="*{discontinued}"></p>
                             <div class="col-md-8">
                                 <label><input value="false"
                                               type="radio"
@@ -296,9 +296,9 @@
                         <!-- Description -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="description">Description</label>
-                            <span th:if="${#fields.hasErrors('description')}"
+                            <p th:if="${#fields.hasErrors('description')}"
                                   class="text-danger"
-                                  th:errors="*{description}"></span>
+                                  th:errors="*{description}"></p>
                             <div class="col-md-8">
                             <textarea th:field="*{description}"
                                   rows="5"
@@ -314,9 +314,9 @@
                         <!-- Specifications -->
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="specifications">Specifications</label>
-                            <span th:if="${#fields.hasErrors('specifications')}"
+                            <p th:if="${#fields.hasErrors('specifications')}"
                                   class="text-danger"
-                                  th:errors="*{specifications}"></span>
+                                  th:errors="*{specifications}"></p>
                             <div class="col-md-8">
                             <textarea th:field="*{specifications}"
                                   rows="5"

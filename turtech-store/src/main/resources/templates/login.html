@@ -12,7 +12,7 @@
 <div class="container">
 
     <!-- Login Control -->
-    <div class="card">
+    <div class="card col-8">
         <div class="card-header">
            LOGIN CONTROL
         </div>
@@ -23,7 +23,7 @@
                    href="#signin"
                    data-toggle="tab"
                    data-target="#signin"
-                   th:classappend="not ${signUpActive} ? 'active'">Sign In</a>
+                   th:classappend="not ${signUpActive} and not ${forgotPasswordActive} ? 'active'">Sign In</a>
             </li>
             <li class="nav-item">
                 <a id="signupTab"
@@ -37,7 +37,8 @@
                 <a id="forgotPasswordTab"
                    class="nav-link"
                    href="#forgotPassword"
-                   data-toggle="tab">Forgot Password?</a>
+                   data-toggle="tab"
+                   th:classappend="${forgotPasswordActive} ? 'active'">Forgot Password?</a>
             </li>
         </ul>
 
@@ -47,7 +48,7 @@
                 <div role="tabpanel"
                      class="tab-pane fade"
                      id="signin"
-                     th:classappend="not ${signUpActive} ? 'show active'">
+                     th:classappend="not ${signUpActive} and not ${forgotPasswordActive} ? 'show active'">
                     <h4 class="card-title mb-4 mt-1">Sign in</h4>
                     <div class="alert alert-danger"
                          th:if="${param.error}">Invalid username and password.</div>
@@ -101,6 +102,7 @@
                         </div>
                     </form>
                 </div>
+
                 <!-- Register tabpanel -->
                 <div role="tabpanel"
                      class="tab-pane fade"
@@ -249,10 +251,12 @@
                         </small>
                     </form>
                 </div>
+
                 <!-- Forgot password tabpanel -->
                 <div role="tabpanel"
                      class="tab-pane fade"
-                     id="forgotPassword">
+                     id="forgotPassword"
+                     th:classappend="${forgotPasswordActive} ? 'show active'">
                     <h4 class="card-title mb-4 mt-1">Forgot password?</h4>
                     <div th:if="${emailNotExist}"
                          class="alert alert-danger">Email doesn't exist.</div>

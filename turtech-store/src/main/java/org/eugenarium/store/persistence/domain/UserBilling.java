@@ -71,7 +71,7 @@ public class UserBilling implements Serializable {
 
 	/**
 	 * Returns the hash code value for this UserBilling. It uses a prime number,
-	 * <tt>id</tt> and <tt>userBllingName</tt> as means to calculate the hash code.
+	 * <tt>id</tt> and <tt>userBillingName</tt> as means to calculate the hash code.
 	 *
 	 * @return the hash code value for this UserBilling
 	 *
