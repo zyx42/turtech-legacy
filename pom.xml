@@ -15,7 +15,7 @@
 	<version>0.5.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>turtech</name>
+	<name>TurTech-legacy</name>
 	<description>The sickest webstore out there!</description>
 
   <properties>
