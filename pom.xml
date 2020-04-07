@@ -10,8 +10,8 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
-	<groupId>org.eugenarium</groupId>
-	<artifactId>turtech</artifactId>
+	<groupId>xyz.zyv42</groupId>
+	<artifactId>turtech-legacy</artifactId>
 	<version>0.5.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
